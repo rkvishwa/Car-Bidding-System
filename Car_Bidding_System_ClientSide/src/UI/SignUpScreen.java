@@ -42,7 +42,7 @@ public class SignUpScreen {
         // ===== GRADIENT OVERLAY =====
         Pane gradientOverlay = new Pane();
         gradientOverlay.setStyle(
-            "-fx-background-color: linear-gradient(to right, rgba(20,30,48,0.85), rgba(36,59,85,0.85));"
+            "-fx-background-color: rgba(20,30,48,0.85);"
         );
 
         // ===== ROOT =====
@@ -58,8 +58,8 @@ public class SignUpScreen {
         card.setMaxWidth(420);
         card.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-background-radius: 18;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0, 0, 8);"
+                "-fx-background-radius: 16;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 15, 0, 0, 5);"
         );
 
         ImageView logo = new ImageView();
@@ -72,16 +72,17 @@ public class SignUpScreen {
         logo.setPreserveRatio(true);
 
         title.setFont(Font.font("System", FontWeight.BOLD, 20));
-        title.setTextFill(Color.web("#1a1a2e"));
+        title.setTextFill(Color.web("#111827"));
 
         Label subtitle = new Label("Fill in your details to get started");
-        subtitle.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
+        subtitle.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         // ===== INPUTS =====
         String inputStyle =
-            "-fx-background-radius: 10;" +
-            "-fx-border-radius: 10;" +
-            "-fx-border-color: #e0e0e0;" +
+            "-fx-background-radius: 8;" +
+            "-fx-border-radius: 8;" +
+            "-fx-border-color: #E5E7EB;" +
+            "-fx-background-color: #F9FAFB;" +
             "-fx-padding: 10 14;" +
             "-fx-font-size: 13px;";
 
@@ -112,11 +113,11 @@ public class SignUpScreen {
 
         // ===== BUTTONS =====
         registerBtn.setStyle(
-                "-fx-background-color: linear-gradient(to right, #43A047, #388E3C);" +
+                "-fx-background-color: #16A34A;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 14px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 10;" +
+                "-fx-background-radius: 8;" +
                 "-fx-padding: 12 0;" +
                 "-fx-cursor: hand;"
         );

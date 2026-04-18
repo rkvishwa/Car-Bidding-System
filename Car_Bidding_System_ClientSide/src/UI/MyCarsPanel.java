@@ -137,23 +137,23 @@ public class MyCarsPanel {
         card.setMaxWidth(280);
         card.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;" +
-            "-fx-border-radius: 14;"
+            "-fx-background-radius: 16;" +
+            "-fx-border-radius: 16;"
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.08));
-        shadow.setRadius(10);
-        shadow.setOffsetY(3);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         card.setEffect(shadow);
 
         // Hover
         card.setOnMouseEntered(e -> card.setStyle(
-            "-fx-background-color: white; -fx-background-radius: 14;" +
-            "-fx-border-radius: 14; -fx-scale-x: 1.02; -fx-scale-y: 1.02;"
+            "-fx-background-color: white; -fx-background-radius: 16;" +
+            "-fx-border-radius: 16; -fx-scale-x: 1.02; -fx-scale-y: 1.02;"
         ));
         card.setOnMouseExited(e -> card.setStyle(
-            "-fx-background-color: white; -fx-background-radius: 14; -fx-border-radius: 14;"
+            "-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16;"
         ));
 
         // ===== IMAGE =====
@@ -172,7 +172,7 @@ public class MyCarsPanel {
 
         StackPane imgContainer = new StackPane(img);
         imgContainer.setStyle(
-            "-fx-background-radius: 14 14 0 0;" +
+            "-fx-background-radius: 16 16 0 0;" +
             "-fx-background-color: #e8e8e8;"
         );
         imgContainer.setMinHeight(160);
@@ -217,10 +217,10 @@ public class MyCarsPanel {
 
         Label name = new Label(titleCar);
         name.setFont(Font.font("System", FontWeight.BOLD, 16));
-        name.setTextFill(Color.web("#1a1a2e"));
+        name.setTextFill(Color.web("#111827"));
 
         Label details = new Label(brand + " • " + model + (year.isEmpty() ? "" : " • " + year));
-        details.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
+        details.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         info.getChildren().addAll(name, details);
 

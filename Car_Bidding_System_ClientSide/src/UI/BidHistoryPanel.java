@@ -122,13 +122,13 @@ public class BidHistoryPanel {
         card.setAlignment(Pos.CENTER_LEFT);
         card.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;"
+            "-fx-background-radius: 16;"
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.06));
-        shadow.setRadius(8);
-        shadow.setOffsetY(2);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         card.setEffect(shadow);
 
         // ===== RESULT ICON =====
@@ -189,10 +189,10 @@ public class BidHistoryPanel {
 
         Label name = new Label(carTitle);
         name.setFont(Font.font("System", FontWeight.BOLD, 15));
-        name.setTextFill(Color.web("#1a1a2e"));
+        name.setTextFill(Color.web("#111827"));
 
         Label details = new Label(brand + " • " + model);
-        details.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
+        details.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         Label time = new Label("📅 " + bidTime);
         time.setStyle("-fx-text-fill: #aaa; -fx-font-size: 11px;");
@@ -205,7 +205,7 @@ public class BidHistoryPanel {
 
         Label bidLbl = new Label("Your Bid: " + bidAmount + " MMK");
         bidLbl.setFont(Font.font("System", FontWeight.BOLD, 14));
-        bidLbl.setTextFill(Color.web("#1976D2"));
+        bidLbl.setTextFill(Color.web("#2563EB"));
 
         Label currentLbl = new Label("Final: " + currentBid + " MMK");
         currentLbl.setStyle("-fx-text-fill: #888; -fx-font-size: 11px;");

@@ -141,14 +141,14 @@ public class MyAuctionPanel {
         card.setAlignment(Pos.CENTER_LEFT);
         card.setStyle(
             "-fx-background-color: " + (isLive ? "#F1F8E9" : "white") + ";" +
-            "-fx-background-radius: 14;" +
-            (isLive ? "-fx-border-color: #C5E1A5; -fx-border-radius: 14; -fx-border-width: 1;" : "")
+            "-fx-background-radius: 16;" +
+            (isLive ? "-fx-border-color: #C5E1A5; -fx-border-radius: 16; -fx-border-width: 1;" : "")
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.06));
-        shadow.setRadius(8);
-        shadow.setOffsetY(2);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         card.setEffect(shadow);
 
         // ===== IMAGE =====
@@ -176,13 +176,13 @@ public class MyAuctionPanel {
 
         Label name = new Label(title);
         name.setFont(Font.font("System", FontWeight.BOLD, 16));
-        name.setTextFill(Color.web("#1a1a2e"));
+        name.setTextFill(Color.web("#111827"));
 
         Label details = new Label(brand + " • " + model);
-        details.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
+        details.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         Label bidInfo = new Label("💰 Current: " + currentBid + " MMK  |  Min: " + minBid + " MMK");
-        bidInfo.setStyle("-fx-text-fill: #1976D2; -fx-font-weight: bold; -fx-font-size: 13px;");
+        bidInfo.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: bold; -fx-font-size: 13px;");
 
         info.getChildren().addAll(name, details, bidInfo);
 

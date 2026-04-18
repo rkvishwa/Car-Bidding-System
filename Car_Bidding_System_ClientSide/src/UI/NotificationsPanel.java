@@ -47,7 +47,7 @@ public class NotificationsPanel {
 
         Button markAllBtn = new Button("✓ Mark All Read");
         markAllBtn.setStyle(
-            "-fx-background-color: linear-gradient(to right, #1976D2, #1565C0);" +
+            "-fx-background-color: #1976D2;" +
             "-fx-text-fill: white;" +
             "-fx-font-size: 12px;" +
             "-fx-font-weight: bold;" +
@@ -152,14 +152,14 @@ public class NotificationsPanel {
 
         card.setStyle(
             "-fx-background-color: " + (isUnread ? "#E8F4FD" : "white") + ";" +
-            "-fx-background-radius: 12;" +
-            (isUnread ? "-fx-border-color: #90CAF9; -fx-border-radius: 12; -fx-border-width: 1;" : "")
+            "-fx-background-radius: 16;" +
+            (isUnread ? "-fx-border-color: #90CAF9; -fx-border-radius: 16; -fx-border-width: 1;" : "")
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.05));
-        shadow.setRadius(6);
-        shadow.setOffsetY(2);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(3);
         card.setEffect(shadow);
 
         // ===== ICON =====

@@ -39,7 +39,7 @@ public class LoginScreen {
         // ===== GRADIENT OVERLAY =====
         Pane gradientOverlay = new Pane();
         gradientOverlay.setStyle(
-            "-fx-background-color: linear-gradient(to right, rgba(20,30,48,0.85), rgba(36,59,85,0.85));"
+            "-fx-background-color: rgba(20,30,48,0.85);"
         );
 
         // ===== ROOT =====
@@ -55,8 +55,8 @@ public class LoginScreen {
         card.setMaxWidth(380);
         card.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-background-radius: 18;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0, 0, 8);"
+                "-fx-background-radius: 16;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 15, 0, 0, 5);"
         );
 
         // ===== LOGO =====
@@ -71,16 +71,17 @@ public class LoginScreen {
 
         // ===== TITLE =====
         title.setFont(Font.font("System", FontWeight.BOLD, 22));
-        title.setTextFill(Color.web("#1a1a2e"));
+        title.setTextFill(Color.web("#111827"));
 
-        subtitle.setTextFill(Color.web("#888"));
+        subtitle.setTextFill(Color.web("#6B7280"));
         subtitle.setFont(Font.font("System", FontWeight.NORMAL, 13));
 
         // ===== INPUTS =====
         String inputStyle =
-            "-fx-background-radius: 10;" +
-            "-fx-border-radius: 10;" +
-            "-fx-border-color: #e0e0e0;" +
+            "-fx-background-radius: 8;" +
+            "-fx-border-radius: 8;" +
+            "-fx-border-color: #E5E7EB;" +
+            "-fx-background-color: #F9FAFB;" +
             "-fx-padding: 12 14;" +
             "-fx-font-size: 13px;";
 
@@ -94,31 +95,31 @@ public class LoginScreen {
 
         // ===== BUTTONS =====
         loginBtn.setStyle(
-                "-fx-background-color: linear-gradient(to right, #1976D2, #1565C0);" +
+                "-fx-background-color: #2563EB;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 14px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 10;" +
+                "-fx-background-radius: 8;" +
                 "-fx-padding: 12 0;" +
                 "-fx-cursor: hand;"
         );
         loginBtn.setMaxWidth(300);
 
         loginBtn.setOnMouseEntered(e -> loginBtn.setStyle(
-                "-fx-background-color: linear-gradient(to right, #1565C0, #0D47A1);" +
+                "-fx-background-color: #1D4ED8;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 14px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 10;" +
+                "-fx-background-radius: 8;" +
                 "-fx-padding: 12 0;" +
                 "-fx-cursor: hand;"
         ));
         loginBtn.setOnMouseExited(e -> loginBtn.setStyle(
-                "-fx-background-color: linear-gradient(to right, #1976D2, #1565C0);" +
+                "-fx-background-color: #2563EB;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 14px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 10;" +
+                "-fx-background-radius: 8;" +
                 "-fx-padding: 12 0;" +
                 "-fx-cursor: hand;"
         ));

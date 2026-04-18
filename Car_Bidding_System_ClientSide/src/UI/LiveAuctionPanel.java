@@ -61,21 +61,22 @@ public class LiveAuctionPanel {
         VBox imageCard = new VBox(0);
         imageCard.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;" +
-            "-fx-border-radius: 14;"
+            "-fx-background-radius: 16;" +
+            "-fx-border-radius: 16;"
         );
         DropShadow imgShadow = new DropShadow();
-        imgShadow.setColor(Color.rgb(0, 0, 0, 0.08));
-        imgShadow.setRadius(10);
+        imgShadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        imgShadow.setRadius(15);
+        imgShadow.setOffsetY(5);
         imageCard.setEffect(imgShadow);
 
         image.setFitWidth(450);
         image.setFitHeight(280);
         image.setPreserveRatio(false);
-        image.setStyle("-fx-background-radius: 14 14 0 0;");
+        image.setStyle("-fx-background-radius: 16 16 0 0;");
 
         StackPane imgStack = new StackPane(image);
-        imgStack.setStyle("-fx-background-color: #e0e0e0; -fx-background-radius: 14 14 0 0;");
+        imgStack.setStyle("-fx-background-color: #e0e0e0; -fx-background-radius: 16 16 0 0;");
         imgStack.setMinHeight(280);
 
         // Status badge on image
@@ -94,9 +95,9 @@ public class LiveAuctionPanel {
         carDetails.setPadding(new Insets(16));
 
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 20));
-        titleLabel.setTextFill(Color.web("#1a1a2e"));
+        titleLabel.setTextFill(Color.web("#111827"));
 
-        detailsLabel.setStyle("-fx-text-fill: #666; -fx-font-size: 13px;");
+        detailsLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13px;");
 
         carDetails.getChildren().addAll(titleLabel, detailsLabel);
         imageCard.getChildren().addAll(imageOverlay, carDetails);
@@ -112,18 +113,19 @@ public class LiveAuctionPanel {
         bidCard.setPadding(new Insets(20));
         bidCard.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;"
+            "-fx-background-radius: 16;"
         );
         DropShadow bidShadow = new DropShadow();
-        bidShadow.setColor(Color.rgb(0, 0, 0, 0.08));
-        bidShadow.setRadius(10);
+        bidShadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        bidShadow.setRadius(15);
+        bidShadow.setOffsetY(5);
         bidCard.setEffect(bidShadow);
 
         Label bidTitle = new Label("Current Highest Bid");
-        bidTitle.setStyle("-fx-text-fill: #888; -fx-font-size: 13px;");
+        bidTitle.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13px;");
 
         currentBidLabel.setFont(Font.font("System", FontWeight.BOLD, 28));
-        currentBidLabel.setTextFill(Color.web("#1976D2"));
+        currentBidLabel.setTextFill(Color.web("#2563EB"));
 
         bidCard.getChildren().addAll(bidTitle, currentBidLabel);
 
@@ -132,7 +134,7 @@ public class LiveAuctionPanel {
         placeBidCard.setPadding(new Insets(20));
         placeBidCard.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;"
+            "-fx-background-radius: 16;"
         );
         placeBidCard.setEffect(bidShadow);
 
@@ -141,19 +143,20 @@ public class LiveAuctionPanel {
 
         bidField.setPromptText("Enter amount higher than current bid...");
         bidField.setStyle(
-            "-fx-background-radius: 10;" +
-            "-fx-border-radius: 10;" +
-            "-fx-border-color: #ddd;" +
+            "-fx-background-radius: 8;" +
+            "-fx-border-radius: 8;" +
+            "-fx-border-color: #E5E7EB;" +
+            "-fx-background-color: #F9FAFB;" +
             "-fx-padding: 12;" +
             "-fx-font-size: 14px;"
         );
 
         bidBtn.setStyle(
-            "-fx-background-color: #4CAF50;" +
+            "-fx-background-color: #16A34A;" +
             "-fx-text-fill: white;" +
             "-fx-font-size: 15px;" +
             "-fx-font-weight: bold;" +
-            "-fx-background-radius: 10;" +
+            "-fx-background-radius: 8;" +
             "-fx-padding: 12 30;" +
             "-fx-cursor: hand;"
         );
@@ -168,7 +171,7 @@ public class LiveAuctionPanel {
         bidsFeedCard.setPadding(new Insets(20));
         bidsFeedCard.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;"
+            "-fx-background-radius: 16;"
         );
         bidsFeedCard.setEffect(bidShadow);
 

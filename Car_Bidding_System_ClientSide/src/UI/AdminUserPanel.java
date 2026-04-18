@@ -91,13 +91,13 @@ public class AdminUserPanel {
         card.setAlignment(Pos.CENTER_LEFT);
         card.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 12;"
+            "-fx-background-radius: 16;"
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.05));
-        shadow.setRadius(6);
-        shadow.setOffsetY(2);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         card.setEffect(shadow);
 
         // ===== AVATAR =====
@@ -135,7 +135,7 @@ public class AdminUserPanel {
 
         Label nameLabel = new Label(name);
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 15));
-        nameLabel.setTextFill(Color.web("#1a1a2e"));
+        nameLabel.setTextFill(Color.web("#111827"));
 
         Label idLabel = new Label("ID: " + userId);
         idLabel.setStyle("-fx-text-fill: #aaa; -fx-font-size: 11px;");

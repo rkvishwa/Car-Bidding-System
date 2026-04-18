@@ -50,7 +50,7 @@ public class Dashboard {
     	    "-fx-font-weight: normal;";
 
     private final String ACTIVE_STYLE =
-    	    "-fx-background-color: linear-gradient(to right, #4CAF50, #45a049);" +
+    	    "-fx-background-color: #2563EB;" +
     	    "-fx-text-fill: white;" +
     	    "-fx-font-size: 14px;" +
     	    "-fx-alignment: CENTER-LEFT;" +
@@ -66,7 +66,7 @@ public class Dashboard {
         // ===== SIDEBAR =====
         VBox sidebar = new VBox(4);
         sidebar.setStyle(
-            "-fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);" +
+            "-fx-background-color: #0F172A;" +
             "-fx-padding: 20 12 20 12;"
         );
         sidebar.setPrefWidth(230);
@@ -186,7 +186,7 @@ public class Dashboard {
         }
 
         // ===== CONTENT =====
-        contentArea.setStyle("-fx-background-color: #f0f2f5; -fx-padding: 0;");
+        contentArea.setStyle("-fx-background-color: #F8F9FA; -fx-padding: 0;");
         contentArea.setSpacing(0);
 
         HBox root = new HBox(sidebar, contentArea);

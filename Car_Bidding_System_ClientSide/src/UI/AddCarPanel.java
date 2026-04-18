@@ -60,16 +60,17 @@ public class AddCarPanel {
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.08));
-        shadow.setRadius(12);
-        shadow.setOffsetY(4);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         formCard.setEffect(shadow);
 
         // Style inputs
         String inputStyle = 
-            "-fx-background-radius: 10;" +
-            "-fx-border-radius: 10;" +
-            "-fx-border-color: #e0e0e0;" +
+            "-fx-background-radius: 8;" +
+            "-fx-border-radius: 8;" +
+            "-fx-border-color: #E5E7EB;" +
+            "-fx-background-color: #F9FAFB;" +
             "-fx-padding: 10 14;" +
             "-fx-font-size: 13px;";
 
@@ -95,11 +96,11 @@ public class AddCarPanel {
         imageField.setStyle(inputStyle);
 
         addBtn.setStyle(
-            "-fx-background-color: #4CAF50;" +
+            "-fx-background-color: #16A34A;" +
             "-fx-text-fill: white;" +
             "-fx-font-size: 15px;" +
             "-fx-font-weight: bold;" +
-            "-fx-background-radius: 10;" +
+            "-fx-background-radius: 8;" +
             "-fx-padding: 12 30;" +
             "-fx-cursor: hand;"
         );

@@ -131,14 +131,14 @@ public class WatchlistPanel {
 
         card.setStyle(
             "-fx-background-color: " + (isLive ? "#F1F8E9" : "white") + ";" +
-            "-fx-background-radius: 14;" +
-            (isLive ? "-fx-border-color: #C5E1A5; -fx-border-radius: 14; -fx-border-width: 1;" : "")
+            "-fx-background-radius: 16;" +
+            (isLive ? "-fx-border-color: #C5E1A5; -fx-border-radius: 16; -fx-border-width: 1;" : "")
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.06));
-        shadow.setRadius(8);
-        shadow.setOffsetY(2);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         card.setEffect(shadow);
 
         // ===== IMAGE =====
@@ -166,10 +166,10 @@ public class WatchlistPanel {
 
         Label name = new Label(title);
         name.setFont(Font.font("System", FontWeight.BOLD, 15));
-        name.setTextFill(Color.web("#1a1a2e"));
+        name.setTextFill(Color.web("#111827"));
 
         Label details = new Label(brand + " • " + model);
-        details.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
+        details.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         Label bidLbl = new Label("💰 " + bid + " MMK");
         bidLbl.setFont(Font.font("System", FontWeight.BOLD, 14));
@@ -202,7 +202,7 @@ public class WatchlistPanel {
         // View Button
         Button viewBtn = new Button("🔨 View Auction");
         viewBtn.setStyle(
-            "-fx-background-color: linear-gradient(to right, #1976D2, #1565C0);" +
+            "-fx-background-color: #1976D2;" +
             "-fx-text-fill: white;" +
             "-fx-font-size: 11px;" +
             "-fx-font-weight: bold;" +

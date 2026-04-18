@@ -113,14 +113,14 @@ public class AdminPendingCarsPanel {
         card.setMaxWidth(300);
         card.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;" +
-            "-fx-border-color: #FFF3E0; -fx-border-radius: 14; -fx-border-width: 2;"
+            "-fx-background-radius: 16;" +
+            "-fx-border-color: #FFF3E0; -fx-border-radius: 16; -fx-border-width: 2;"
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.08));
-        shadow.setRadius(10);
-        shadow.setOffsetY(3);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         card.setEffect(shadow);
 
         // ===== IMAGE =====
@@ -138,7 +138,7 @@ public class AdminPendingCarsPanel {
         }
 
         StackPane imgContainer = new StackPane(img);
-        imgContainer.setStyle("-fx-background-color: #e8e8e8; -fx-background-radius: 14 14 0 0;");
+        imgContainer.setStyle("-fx-background-color: #e8e8e8; -fx-background-radius: 16 16 0 0;");
         imgContainer.setMinHeight(170);
 
         // Pending badge
@@ -158,10 +158,10 @@ public class AdminPendingCarsPanel {
 
         Label name = new Label(d[2]);
         name.setFont(Font.font("System", FontWeight.BOLD, 16));
-        name.setTextFill(Color.web("#1a1a2e"));
+        name.setTextFill(Color.web("#111827"));
 
         Label info = new Label(d[3] + " • " + d[4] + " • " + d[5]);
-        info.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
+        info.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         Label priceLabel = new Label("💰 " + d[6] + " MMK");
         priceLabel.setStyle("-fx-text-fill: #1976D2; -fx-font-weight: bold; -fx-font-size: 14px;");
@@ -187,7 +187,7 @@ public class AdminPendingCarsPanel {
 
         Button approveBtn = new Button("✅ Approve");
         approveBtn.setStyle(
-            "-fx-background-color: #4CAF50;" +
+            "-fx-background-color: #16A34A;" +
             "-fx-text-fill: white;" +
             "-fx-font-size: 12px;" +
             "-fx-font-weight: bold;" +

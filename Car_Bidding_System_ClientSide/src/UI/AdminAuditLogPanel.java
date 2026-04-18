@@ -35,12 +35,13 @@ public class AdminAuditLogPanel {
         filterBar.setAlignment(Pos.CENTER_LEFT);
         filterBar.setPadding(new Insets(8, 14, 8, 14));
         filterBar.setStyle(
-            "-fx-background-color: white; -fx-background-radius: 10;"
+            "-fx-background-color: white; -fx-background-radius: 12;"
         );
 
         DropShadow filterShadow = new DropShadow();
         filterShadow.setColor(Color.rgb(0, 0, 0, 0.04));
-        filterShadow.setRadius(4);
+        filterShadow.setRadius(15);
+        filterShadow.setOffsetY(3);
         filterBar.setEffect(filterShadow);
 
         Label filterLabel = new Label("🔍 Filter:");
@@ -50,14 +51,14 @@ public class AdminAuditLogPanel {
         filterField.setPromptText("Search by Admin ID, Action, or Target ID...");
         filterField.setPrefWidth(350);
         filterField.setStyle(
-            "-fx-background-radius: 8; -fx-border-radius: 8;" +
-            "-fx-border-color: #e0e0e0; -fx-padding: 8 12; -fx-font-size: 12px;"
+            "-fx-background-radius: 8; -fx-border-radius: 8; -fx-background-color: #F9FAFB;" +
+            "-fx-border-color: #E5E7EB; -fx-padding: 8 12; -fx-font-size: 12px;"
         );
         HBox.setHgrow(filterField, Priority.ALWAYS);
 
         Button filterBtn = new Button("Filter");
         filterBtn.setStyle(
-            "-fx-background-color: linear-gradient(to right, #1976D2, #1565C0);" +
+            "-fx-background-color: #2563EB;" +
             "-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;" +
             "-fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"
         );

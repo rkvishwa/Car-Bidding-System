@@ -140,30 +140,30 @@ public class AuctionListPanel {
         card.setMaxWidth(280);
         card.setStyle(
             "-fx-background-color: white;" +
-            "-fx-background-radius: 14;" +
-            "-fx-border-radius: 14;"
+            "-fx-background-radius: 16;" +
+            "-fx-border-radius: 16;"
         );
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.rgb(0, 0, 0, 0.08));
-        shadow.setRadius(12);
-        shadow.setOffsetY(4);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.04));
+        shadow.setRadius(15);
+        shadow.setOffsetY(5);
         card.setEffect(shadow);
 
         // Hover effect
         card.setOnMouseEntered(e -> {
             card.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-background-radius: 14;" +
-                "-fx-border-radius: 14;" +
+                "-fx-background-radius: 16;" +
+                "-fx-border-radius: 16;" +
                 "-fx-scale-x: 1.02; -fx-scale-y: 1.02;"
             );
         });
         card.setOnMouseExited(e -> {
             card.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-background-radius: 14;" +
-                "-fx-border-radius: 14;"
+                "-fx-background-radius: 16;" +
+                "-fx-border-radius: 16;"
             );
         });
 
@@ -184,7 +184,7 @@ public class AuctionListPanel {
         // Image container with rounded top
         StackPane imgContainer = new StackPane(img);
         imgContainer.setStyle(
-            "-fx-background-radius: 14 14 0 0;" +
+            "-fx-background-radius: 16 16 0 0;" +
             "-fx-background-color: #e8e8e8;"
         );
         imgContainer.setMinHeight(160);
@@ -225,10 +225,10 @@ public class AuctionListPanel {
 
         Label name = new Label(title);
         name.setFont(Font.font("System", FontWeight.BOLD, 16));
-        name.setTextFill(Color.web("#1a1a2e"));
+        name.setTextFill(Color.web("#111827"));
 
         Label details = new Label(brand + " • " + model);
-        details.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
+        details.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         // Bid amount
         Label bidLbl = new Label("💰 " + bid + " MMK");
@@ -243,7 +243,7 @@ public class AuctionListPanel {
 
         Button openBtn = new Button("View Auction");
         openBtn.setStyle(
-            "-fx-background-color: linear-gradient(to right, #1976D2, #1565C0);" +
+            "-fx-background-color: #1976D2;" +
             "-fx-text-fill: white;" +
             "-fx-font-size: 12px;" +
             "-fx-font-weight: bold;" +
@@ -258,12 +258,12 @@ public class AuctionListPanel {
 
         // Hover
         openBtn.setOnMouseEntered(e -> openBtn.setStyle(
-            "-fx-background-color: linear-gradient(to right, #1565C0, #0D47A1);" +
+            "-fx-background-color: #1565C0;" +
             "-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;" +
             "-fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"
         ));
         openBtn.setOnMouseExited(e -> openBtn.setStyle(
-            "-fx-background-color: linear-gradient(to right, #1976D2, #1565C0);" +
+            "-fx-background-color: #1976D2;" +
             "-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;" +
             "-fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"
         ));
