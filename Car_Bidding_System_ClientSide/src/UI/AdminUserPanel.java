@@ -13,9 +13,12 @@ import java.util.function.Consumer;
 
 public class AdminUserPanel {
 
+    private VBox pendingList = new VBox(10);
     private VBox list = new VBox(10);
     private Consumer<String> onBan;
     private Consumer<String> onMakeAdmin;
+    private Consumer<String> onApprove;
+    private Consumer<String> onReject;
 
     public VBox getView() {
 
@@ -49,13 +52,31 @@ public class AdminUserPanel {
 
         VBox header = new VBox(4, headerRow, subtitle);
 
+        // ===== PENDING SECTION =====
+        Label pendingTitle = new Label("⏳ Pending Registrations");
+        pendingTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
+        pendingTitle.setTextFill(Color.web("#E65100"));
+        pendingTitle.setPadding(new Insets(10, 0, 0, 0));
+
+        ScrollPane pendingScroll = new ScrollPane(pendingList);
+        pendingScroll.setFitToWidth(true);
+        pendingScroll.setPrefHeight(200);
+        pendingScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+        pendingScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        // ===== ALL USERS SECTION =====
+        Label allTitle = new Label("👤 All Users");
+        allTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
+        allTitle.setTextFill(Color.web("#1a1a2e"));
+        allTitle.setPadding(new Insets(10, 0, 0, 0));
+
         ScrollPane scroll = new ScrollPane(list);
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
-        root.getChildren().addAll(header, scroll);
+        root.getChildren().addAll(header, pendingTitle, pendingScroll, new Separator(), allTitle, scroll);
 
         return root;
     }
@@ -71,7 +92,6 @@ public class AdminUserPanel {
             return;
         }
 
-        int count = 0;
         for (String row : res.split("\n")) {
             if (row.trim().isEmpty()) continue;
 
@@ -80,10 +100,50 @@ public class AdminUserPanel {
             
             String status = d.length > 3 ? d[3] : "ACTIVE";
 
-            // d[0]=userId, d[1]=name, d[2]=role, d[3]=status
             list.getChildren().add(createCard(d[0], d[1], d[2], status));
-            count++;
         }
+    }
+
+    public void renderPending(String res) {
+        pendingList.getChildren().clear();
+
+        if (res == null || res.trim().isEmpty()) {
+            Label empty = new Label("No pending registrations");
+            empty.setStyle("-fx-text-fill: #999; -fx-font-size: 13px; -fx-padding: 10;");
+            pendingList.getChildren().add(empty);
+            return;
+        }
+
+        for (String row : res.split("\n")) {
+            if (row.trim().isEmpty()) continue;
+            String[] d = row.split("\\|");
+            if (d.length < 3) continue;
+            pendingList.getChildren().add(createPendingCard(d[0], d[1], d[2]));
+        }
+    }
+
+    private HBox createPendingCard(String userId, String name, String role) {
+        HBox card = new HBox(16);
+        card.setPadding(new Insets(10, 15, 10, 15));
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.setStyle("-fx-background-color: #FFF3E0; -fx-background-radius: 12;");
+
+        VBox info = new VBox(2);
+        HBox.setHgrow(info, Priority.ALWAYS);
+        Label n = new Label(name); n.setStyle("-fx-font-weight: bold;");
+        Label r = new Label(role + " | ID: " + userId); r.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
+        info.getChildren().addAll(n, r);
+
+        Button approveBtn = new Button("✅ Approve");
+        approveBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 8;");
+        approveBtn.setOnAction(e -> { if(onApprove != null) onApprove.accept(userId); });
+
+        Button rejectBtn = new Button("❌ Reject");
+        rejectBtn.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 8;");
+        rejectBtn.setOnAction(e -> { if(onReject != null) onReject.accept(userId); });
+
+        card.getChildren().addAll(info, approveBtn, rejectBtn);
+        return card;
     }
 
     private HBox createCard(String userId, String name, String role, String status) {
@@ -256,5 +316,13 @@ public class AdminUserPanel {
 
     public void onMakeAdmin(Consumer<String> action) {
         this.onMakeAdmin = action;
+    }
+
+    public void onApprove(Consumer<String> action) {
+        this.onApprove = action;
+    }
+
+    public void onReject(Consumer<String> action) {
+        this.onReject = action;
     }
 }

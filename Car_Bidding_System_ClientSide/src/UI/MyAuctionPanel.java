@@ -111,6 +111,8 @@ public class MyAuctionPanel {
             // d[4]=image, d[5]=currentBid, d[6]=minBid, d[7]=status, d[8]=winnerId
 
             String status = d[7];
+            if ("PENDING".equals(status)) continue;
+            
             HBox card = createCard(d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8]);
 
             if ("ACTIVE".equals(status)) {
@@ -228,7 +230,7 @@ public class MyAuctionPanel {
         if (isLive) {
             statusBadge.setText("🔴 LIVE");
             statusBadge.setStyle(
-                "-fx-background-color: #4CAF50; -fx-text-fill: white;" +
+                "-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32;" +
                 "-fx-background-radius: 20;"
             );
 

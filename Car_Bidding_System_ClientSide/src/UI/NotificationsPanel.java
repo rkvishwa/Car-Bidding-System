@@ -128,8 +128,8 @@ public class NotificationsPanel {
             countLabel.setText(unread > 0 ? unread + " unread" : total + " total");
             if (unread > 0) {
                 countLabel.setStyle(
-                    "-fx-text-fill: white; -fx-font-size: 12px;" +
-                    "-fx-background-color: #1976D2; -fx-background-radius: 12;" +
+                    "-fx-text-fill: #1565C0; -fx-font-size: 12px;" +
+                    "-fx-background-color: #E3F2FD; -fx-background-radius: 12;" +
                     "-fx-padding: 4 12; -fx-font-weight: bold;"
                 );
             }

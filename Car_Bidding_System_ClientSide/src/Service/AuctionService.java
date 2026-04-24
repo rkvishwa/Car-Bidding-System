@@ -39,4 +39,20 @@ public class AuctionService {
     public static String getMyAuctions(String userId) throws Exception {
         return ClientManager.send("GET_MY_AUCTIONS:" + userId);
     }
+
+    public static String getPendingAuctions() throws Exception {
+        return ClientManager.send("GET_PENDING_AUCTIONS");
+    }
+
+    public static String approveAuction(String id, String minBid, String duration, String adminId) throws Exception {
+        return ClientManager.send("APPROVE_AUCTION:" + id + ":" + minBid + ":" + duration + ":" + adminId);
+    }
+
+    public static String confirmWinner(String id, String adminId) throws Exception {
+        return ClientManager.send("CONFIRM_WINNER:" + id + ":" + adminId);
+    }
+
+    public static String getAuctionEndTime(String id) throws Exception {
+        return ClientManager.send("GET_AUCTION_END_TIME:" + id);
+    }
 }

@@ -18,6 +18,7 @@ public class LoginScreen {
 
     public Button loginBtn = new Button("Login");
     public Button signupBtn = new Button("Create Account");
+    public Button forgotPasswordBtn = new Button("Forgot Password?");
 
     public Label title = new Label("CAR AUCTION SYSTEM");
     public Label subtitle = new Label("Login to continue");
@@ -131,6 +132,13 @@ public class LoginScreen {
                 "-fx-cursor: hand;"
         );
 
+        forgotPasswordBtn.setStyle(
+                "-fx-background-color: transparent;" +
+                "-fx-text-fill: #6B7280;" +
+                "-fx-font-size: 12px;" +
+                "-fx-cursor: hand;"
+        );
+
         message.setTextFill(Color.RED);
         message.setFont(Font.font("System", FontWeight.NORMAL, 12));
 
@@ -143,6 +151,7 @@ public class LoginScreen {
                 passwordField,
                 message,
                 loginBtn,
+                forgotPasswordBtn,
                 signupBtn
         );
 

@@ -73,6 +73,29 @@ public class ClientHandler extends Thread {
                             break;
                         }
 
+                        case "GET_PENDING_USERS": {
+                            UserService service = new UserService();
+                            response = service.getPendingUsers();
+                            break;
+                        }
+
+                        case "APPROVE_USER": {
+                            UserService service = new UserService();
+                            boolean ok = service.approveUser(parts[1]);
+                            if (ok) {
+                                new AuditDAO().logAction(parts[2], "APPROVE_USER", parts[1]);
+                                broadcast("USER_APPROVED:" + parts[1]);
+                            }
+                            response = ok ? "SUCCESS" : "FAILED";
+                            break;
+                        }
+
+                        case "FORGOT_PASSWORD": {
+                            UserService service = new UserService();
+                            response = service.forgotPassword(parts[1]);
+                            break;
+                        }
+
                         case "ADD_CAR": {
                         	String[] parts1 = request.split(":");
                             CarDAO dao = new CarDAO();
@@ -118,15 +141,46 @@ public class ClientHandler extends Thread {
                             break;
                         }
 
+                        case "GET_PENDING_AUCTIONS": {
+                            AuctionDAO dao = new AuctionDAO();
+                            response = dao.getPendingAuctions();
+                            break;
+                        }
+
+                        case "APPROVE_AUCTION": {
+                            AuctionDAO dao = new AuctionDAO();
+                            boolean ok = dao.approveAuction(parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]));
+                            if (ok) {
+                                new AuditDAO().logAction(parts[4], "APPROVE_AUCTION", parts[1]);
+                                broadcast("AUCTION_APPROVED:" + parts[1]);
+                            }
+                            response = ok ? "SUCCESS" : "FAILED";
+                            break;
+                        }
+
+                        case "CONFIRM_WINNER": {
+                            AuctionDAO dao = new AuctionDAO();
+                            boolean ok = dao.confirmWinner(parts[1]);
+                            if (ok) {
+                                new AuditDAO().logAction(parts[2], "CONFIRM_WINNER", parts[1]);
+                                broadcast("WINNER_CONFIRMED:" + parts[1]);
+                            }
+                            response = ok ? "SUCCESS" : "FAILED";
+                            break;
+                        }
+
+                        case "GET_AUCTION_END_TIME": {
+                            AuctionDAO dao = new AuctionDAO();
+                            response = dao.getAuctionEndTime(parts[1]);
+                            break;
+                        }
+
                         case "CREATE_AUCTION": {
                             AuctionDAO dao = new AuctionDAO();
-                            response = dao.createAuction(parts[1], Double.parseDouble(parts[2]));
+                            response = dao.createAuction(parts[1], 0);
 
                             if (response.startsWith("SUCCESS")) {
-                                // Extract auction ID from response
-                                String[] respParts = response.split(":");
-                                String auctionId = respParts.length > 2 ? respParts[2] : "";
-                                broadcast("AUCTION_STARTED:" + auctionId);
+                                broadcast("AUCTION_PENDING");
                             }
                             break;
                         }
@@ -258,6 +312,27 @@ public class ClientHandler extends Thread {
                                 }
                             }
 
+                            response = ok ? "SUCCESS" : "FAILED";
+                            break;
+                        }
+
+                        case "SOFT_DELETE_CAR": {
+                            CarDAO dao = new CarDAO();
+                            boolean ok = dao.softDeleteCar(parts[1]);
+                            if (ok) {
+                                broadcast("CAR_DELETED_BY_SELLER:" + parts[1]);
+                            }
+                            response = ok ? "SUCCESS" : "FAILED";
+                            break;
+                        }
+
+                        case "DELETE_CAR_PERMANENT": {
+                            CarDAO dao = new CarDAO();
+                            boolean ok = dao.deleteCar(parts[1]);
+                            if (ok) {
+                                new AuditDAO().logAction(parts[2], "DELETE_CAR", parts[1]);
+                                broadcast("CAR_DELETED:" + parts[1]);
+                            }
                             response = ok ? "SUCCESS" : "FAILED";
                             break;
                         }

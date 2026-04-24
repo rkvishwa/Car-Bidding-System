@@ -16,6 +16,12 @@ public class BidDAO {
 	        return false;
 	    }
 
+        // Check if user is a buyer
+        if (!isUserBuyer(buyerId)) {
+            System.out.println("Only buyers can place bids!");
+            return false;
+        }
+
 	    double currentHighest = getHighestBid(auctionId);
 
 	    System.out.println("Current Highest: " + currentHighest);
@@ -81,6 +87,17 @@ public class BidDAO {
 	}
 	
     
+    private boolean isUserBuyer(String userId) {
+        String sql = "SELECT role FROM users WHERE user_id=? AND role='BUYER'";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
     private boolean isAuctionValid(String auctionId) {
         String sql = "SELECT * FROM auctions WHERE auction_id=? AND status='ACTIVE'";
 

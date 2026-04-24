@@ -29,6 +29,14 @@ public class CarService {
     public static String rejectCar(String carId, String adminId) throws Exception {
         return ClientManager.send("REJECT_CAR:" + carId + ":" + adminId);
     }
+
+    public static String softDeleteCar(String carId) throws Exception {
+        return ClientManager.send("SOFT_DELETE_CAR:" + carId);
+    }
+
+    public static String deleteCarPermanent(String carId, String adminId) throws Exception {
+        return ClientManager.send("DELETE_CAR_PERMANENT:" + carId + ":" + adminId);
+    }
     
     public static String addCar(String sellerId, String title, String brand,
             String model, String year, String price,

@@ -106,6 +106,8 @@ public class AuctionListPanel {
 
             // d[0]=auctionId, d[1]=title, d[2]=brand, d[3]=model,
             // d[4]=currentBid, d[5]=status, d[6]=image
+            
+            if ("PENDING".equals(d[5])) continue;
 
             VBox card = createCard(d[0], d[1], d[2], d[3], d[4], d[5], d[6]);
 
@@ -197,19 +199,19 @@ public class AuctionListPanel {
 
         if ("ACTIVE".equals(status)) {
             statusBadge.setStyle(
-                "-fx-background-color: #4CAF50; -fx-text-fill: white;" +
+                "-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32;" +
                 "-fx-background-radius: 20; -fx-font-weight: bold;"
             );
             statusBadge.setText("🔴 LIVE");
         } else if ("CLOSED".equals(status)) {
             statusBadge.setStyle(
-                "-fx-background-color: #9E9E9E; -fx-text-fill: white;" +
+                "-fx-background-color: #F5F5F5; -fx-text-fill: #757575;" +
                 "-fx-background-radius: 20; -fx-font-weight: bold;"
             );
             statusBadge.setText("CLOSED");
         } else {
             statusBadge.setStyle(
-                "-fx-background-color: #FF9800; -fx-text-fill: white;" +
+                "-fx-background-color: #FFF3E0; -fx-text-fill: #E65100;" +
                 "-fx-background-radius: 20; -fx-font-weight: bold;"
             );
             statusBadge.setText("⏳ UPCOMING");
@@ -253,7 +255,7 @@ public class AuctionListPanel {
         );
 
         openBtn.setOnAction(e -> {
-            Controller.Navigation.goToLiveAuction(id, userId, "AUCTION_LIST");
+            Controller.Navigation.goToLiveAuction(id, userId, "BUYER", "AUCTION_LIST");
         });
 
         // Hover

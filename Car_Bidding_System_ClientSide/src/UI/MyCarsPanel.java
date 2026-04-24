@@ -1,6 +1,7 @@
 package UI;
 
 import Client.ClientManager;
+import Service.CarService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -11,9 +12,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.function.Consumer;
+
 public class MyCarsPanel {
 
     private String userId;
+    private Consumer<String> onDelete;
+    private Consumer<String> onUpdate;
+    private FlowPane cards = new FlowPane();
+    private Label countLabel = new Label();
 
     public MyCarsPanel(String userId) {
         this.userId = userId;
@@ -36,7 +43,6 @@ public class MyCarsPanel {
         Region hSpacer = new Region();
         HBox.setHgrow(hSpacer, Priority.ALWAYS);
 
-        Label countLabel = new Label();
         countLabel.setStyle(
             "-fx-text-fill: #888; -fx-font-size: 13px;" +
             "-fx-background-color: #e8e8e8; -fx-background-radius: 12;" +
@@ -50,21 +56,32 @@ public class MyCarsPanel {
 
         VBox header = new VBox(4, headerRow, subtitle);
 
-        FlowPane cards = new FlowPane();
         cards.setHgap(18);
         cards.setVgap(18);
         cards.setPadding(new Insets(8, 0, 0, 0));
 
-        String res;
+        ScrollPane scroll = new ScrollPane(cards);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        VBox.setVgrow(scroll, Priority.ALWAYS);
 
+        root.getChildren().addAll(header, scroll);
+
+        loadCars();
+
+        return root;
+    }
+
+    public void loadCars() {
+        cards.getChildren().clear();
+
+        String res;
         try {
             res = ClientManager.send("GET_MY_CARS:" + userId);
         } catch (Exception e) {
             e.printStackTrace();
-            Label error = new Label("⚠ Server Error — Could not load cars");
-            error.setStyle("-fx-text-fill: #D32F2F; -fx-font-size: 14px;");
-            root.getChildren().addAll(header, error);
-            return root;
+            return;
         }
 
         if (res == null || res.startsWith("ERROR") || res.trim().isEmpty()) {
@@ -83,22 +100,17 @@ public class MyCarsPanel {
 
             emptyState.getChildren().addAll(emptyIcon, empty, hint);
             countLabel.setText("0 cars");
-            root.getChildren().addAll(header, emptyState);
-            return root;
+            cards.getChildren().add(emptyState);
+            return;
         }
 
         int count = 0;
         for (String row : res.split("\n")) {
-
             row = row.trim();
             if (row.isEmpty()) continue;
 
             String[] d = row.split("\\|");
-
-            if (d.length < 7) {
-                System.out.println("Skipping invalid row: " + row);
-                continue;
-            }
+            if (d.length < 7) continue;
 
             String carId = d[0];
             String titleCar = d[1];
@@ -117,15 +129,6 @@ public class MyCarsPanel {
         }
 
         countLabel.setText(count + " car" + (count != 1 ? "s" : ""));
-
-        ScrollPane scroll = new ScrollPane(cards);
-        scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        VBox.setVgrow(scroll, Priority.ALWAYS);
-
-        root.getChildren().addAll(header, scroll);
-        return root;
     }
 
     private VBox createCard(String carId, String titleCar, String brand, String model,
@@ -186,21 +189,21 @@ public class MyCarsPanel {
         switch (status) {
             case "APPROVED":
                 statusLabel.setStyle(
-                    "-fx-background-color: #4CAF50; -fx-text-fill: white;" +
+                    "-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32;" +
                     "-fx-background-radius: 20;"
                 );
                 statusLabel.setText("✅ APPROVED");
                 break;
             case "PENDING":
                 statusLabel.setStyle(
-                    "-fx-background-color: #FF9800; -fx-text-fill: white;" +
+                    "-fx-background-color: #FFF3E0; -fx-text-fill: #E65100;" +
                     "-fx-background-radius: 20;"
                 );
                 statusLabel.setText("⏳ PENDING");
                 break;
             case "REJECTED":
                 statusLabel.setStyle(
-                    "-fx-background-color: #D32F2F; -fx-text-fill: white;" +
+                    "-fx-background-color: #FFEBEE; -fx-text-fill: #C62828;" +
                     "-fx-background-radius: 20;"
                 );
                 statusLabel.setText("❌ REJECTED");
@@ -244,8 +247,62 @@ public class MyCarsPanel {
         dateLabel.setStyle("-fx-text-fill: #aaa; -fx-font-size: 11px;");
         info.getChildren().add(dateLabel);
 
+        // ===== PENDING ACTION BUTTONS =====
+        if ("PENDING".equals(status)) {
+            HBox actions = new HBox(8);
+            actions.setPadding(new Insets(8, 0, 0, 0));
+
+            Button updateBtn = new Button("✏️ Update");
+            updateBtn.setStyle(
+                "-fx-background-color: #1976D2;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 11px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8;" +
+                "-fx-padding: 6 14;" +
+                "-fx-cursor: hand;"
+            );
+            updateBtn.setOnAction(e -> {
+                if (onUpdate != null) onUpdate.accept(carId);
+            });
+
+            Button deleteBtn = new Button("🗑️ Delete");
+            deleteBtn.setStyle(
+                "-fx-background-color: #D32F2F;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 11px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8;" +
+                "-fx-padding: 6 14;" +
+                "-fx-cursor: hand;"
+            );
+            deleteBtn.setOnAction(e -> {
+                // Confirmation dialog
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete Car");
+                alert.setHeaderText("Are you sure you want to delete this car?");
+                alert.setContentText("This will remove the car from your listings.");
+                alert.showAndWait().ifPresent(result -> {
+                    if (result == ButtonType.OK) {
+                        if (onDelete != null) onDelete.accept(carId);
+                    }
+                });
+            });
+
+            actions.getChildren().addAll(updateBtn, deleteBtn);
+            info.getChildren().add(actions);
+        }
+
         card.getChildren().addAll(imageStack, info);
 
         return card;
+    }
+
+    public void onDelete(Consumer<String> action) {
+        this.onDelete = action;
+    }
+
+    public void onUpdate(Consumer<String> action) {
+        this.onUpdate = action;
     }
 }

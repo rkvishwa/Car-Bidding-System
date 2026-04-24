@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import Event.AdminSession;
 import Event.Event;
 import Event.EventBus;
+import Service.CarService;
 
 public class DashboardController {
 
@@ -148,12 +149,22 @@ public class DashboardController {
                         }
                     }
 
-                    // audit log live update
                     if (event.type.equals("AUDIT_LOG")) {
 
                         if (currentPage.equals("ADMIN_AUDIT")) {
                             refreshAuditLogs();
                         }
+                    }
+
+                    if (event.type.equals("USER_APPROVED") || event.type.equals("USER_REJECTED")) {
+                        if (currentPage.equals("ADMIN_USERS")) refreshAdminUsers();
+                    }
+
+                    if (event.type.equals("AUCTION_APPROVED") || event.type.equals("WINNER_CONFIRMED")) {
+                        if (currentPage.equals("ADMIN_AUCTIONS")) refreshAdminAuctions();
+                        // Also notify buyers/sellers to refresh lists
+                        if (currentPage.equals("AUCTIONS")) refreshAuctionList();
+                        if (currentPage.equals("MY_AUCTIONS")) refreshMyAuctions();
                     }
                 }
             });
@@ -282,14 +293,28 @@ public class DashboardController {
     }
 
     private void refreshMyCars() {
-        view.contentArea.getChildren().setAll(
-                new MyCarsPanel(userId).getView()
-        );
+        MyCarsPanel panel = new MyCarsPanel(userId);
+
+        panel.onDelete(carId -> {
+            try {
+                String res = CarService.softDeleteCar(carId);
+                if ("SUCCESS".equals(res)) {
+                    panel.loadCars(); // Refresh the panel
+                }
+            } catch (Exception e) { e.printStackTrace(); }
+        });
+
+        panel.onUpdate(carId -> {
+            // TODO: Navigate to an edit car form with pre-filled data
+            System.out.println("Update car: " + carId);
+        });
+
+        view.contentArea.getChildren().setAll(panel.getView());
     }
 
     private void refreshMyAuctions() {
     	MyAuctionPanel panel = new MyAuctionPanel();
-    	new MyAuctionController(panel, userId);
+    	new MyAuctionController(panel, userId, role);
 
     	view.contentArea.getChildren().setAll(panel.getView());
     }

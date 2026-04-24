@@ -32,7 +32,7 @@ public class UserService {
         try {
             Connection con = DBConnection.getConnection();
 
-            String sql = "SELECT user_id, role, name FROM users WHERE email=? AND password=? AND status='ACTIVE'";
+            String sql = "SELECT user_id, role, name, status FROM users WHERE email=? AND password=?";
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, email);
@@ -41,6 +41,10 @@ public class UserService {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                String status = rs.getString("status");
+                if ("PENDING".equals(status)) return "PENDING";
+                if ("BANNED".equals(status)) return "BANNED";
+                
                 return rs.getString("user_id") + ":" + rs.getString("role") + ":" + rs.getString("name");
             }
 
@@ -49,6 +53,30 @@ public class UserService {
         }
 
         return "FAILED";
+    }
+
+    public String getPendingUsers() {
+        return userDAO.getPendingUsers();
+    }
+
+    public boolean approveUser(String userId) {
+        return userDAO.approveUser(userId);
+    }
+
+    public String forgotPassword(String email) {
+        if (!userDAO.userExists(email)) return "FAILED:UserNotFound";
+        
+        int attempts = userDAO.getForgotAttempts(email);
+        if (attempts >= 2) { // 3rd attempt blocks
+            userDAO.deleteUserByEmail(email);
+            return "FAILED:AccountDeleted";
+        }
+        
+        userDAO.incrementForgotAttempts(email);
+        String newPass = "TEMP" + (int)(Math.random() * 9000 + 1000);
+        userDAO.resetPassword(email, newPass);
+        
+        return "SUCCESS:" + newPass;
     }
     
     public String getAllUsers() {

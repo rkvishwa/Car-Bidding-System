@@ -27,4 +27,16 @@ public class UserService {
     public static String makeAdmin(String userId, String adminId) throws Exception {
         return ClientManager.send("MAKE_ADMIN:" + userId + ":" + adminId);
     }
+
+    public static String forgotPassword(String email) throws Exception {
+        return ClientManager.send("FORGOT_PASSWORD:" + email);
+    }
+
+    public static String getPendingUsers() throws Exception {
+        return ClientManager.send("GET_PENDING_USERS");
+    }
+
+    public static String approveUser(String userId, String adminId) throws Exception {
+        return ClientManager.send("APPROVE_USER:" + userId + ":" + adminId);
+    }
 }

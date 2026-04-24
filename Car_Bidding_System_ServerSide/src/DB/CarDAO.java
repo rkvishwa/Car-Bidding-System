@@ -80,7 +80,7 @@ public class CarDAO {
             SELECT car_id, seller_id, title, brand, model, year, 
                    price_start, description, image, status, created_at
             FROM car 
-            WHERE status='PENDING'
+            WHERE status IN ('PENDING', 'DELETED_BY_SELLER')
             ORDER BY created_at DESC
         """;
 
@@ -106,7 +106,8 @@ public class CarDAO {
                     rs.getDouble("price_start") + "|" +
                     safeDesc + "|" +
                     safeImage + "|" +
-                    rs.getString("created_at") + "\n"
+                    rs.getString("created_at") + "|" +
+                    rs.getString("status") + "\n"
                 );
             }
 
@@ -187,7 +188,7 @@ public class CarDAO {
                 price_start,
                 description
             FROM car
-            WHERE seller_id = ?
+            WHERE seller_id = ? AND status != 'DELETED_BY_SELLER'
             ORDER BY created_at DESC
         """;
 
@@ -225,6 +226,22 @@ public class CarDAO {
 
     public boolean rejectCar(String carId) {
         return updateCarStatus(carId, "REJECTED");
+    }
+
+    public boolean softDeleteCar(String carId) {
+        return updateCarStatus(carId, "DELETED_BY_SELLER");
+    }
+
+    public boolean deleteCar(String carId) {
+        String sql = "DELETE FROM car WHERE car_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, carId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     // Get car details for admin

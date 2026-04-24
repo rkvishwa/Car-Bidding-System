@@ -8,7 +8,7 @@ import Util.IDGenerator;
 public class UserDAO {
 
     public boolean registerUser(String name, String email, String password, String role) {
-        String sql = "INSERT INTO users VALUES (?, ?, ?, ?, ?, 'ACTIVE', ?, NOW())";
+        String sql = "INSERT INTO users VALUES (?, ?, ?, ?, ?, 'PENDING', ?, NOW(), 0)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -146,6 +146,100 @@ public class UserDAO {
         }
 
         return false;
+    }
+
+    public String getPendingUsers() {
+        String sql = "SELECT user_id, name, role, status FROM users WHERE status='PENDING'";
+        StringBuilder sb = new StringBuilder();
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                sb.append(rs.getString("user_id"))
+                  .append("|")
+                  .append(rs.getString("name"))
+                  .append("|")
+                  .append(rs.getString("role"))
+                  .append("|")
+                  .append(rs.getString("status"))
+                  .append("\n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return sb.toString();
+    }
+
+    public boolean approveUser(String userId) {
+        String sql = "UPDATE users SET status='ACTIVE' WHERE user_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, userId);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String getUserByEmail(String email) {
+        String sql = "SELECT user_id, name, role, status FROM users WHERE email=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("user_id") + "|" + rs.getString("name") + "|" + rs.getString("role") + "|" + rs.getString("status");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
+    }
+
+    public boolean resetPassword(String email, String newPassword) {
+        String sql = "UPDATE users SET password=?, forgot_password_attempts=0 WHERE email=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public int getForgotAttempts(String email) {
+        String sql = "SELECT forgot_password_attempts FROM users WHERE email=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    public void incrementForgotAttempts(String email) {
+        String sql = "UPDATE users SET forgot_password_attempts = forgot_password_attempts + 1 WHERE email=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public void deleteUserByEmail(String email) {
+        String sql = "DELETE FROM users WHERE email=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
     }
     
 }

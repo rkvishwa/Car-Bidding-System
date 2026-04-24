@@ -57,6 +57,7 @@ public class Navigation {
 
         // Store references for cleanup
         dashboardController = controller;
+        dashboard = view; // Store view reference
 
         stage.setScene(view.getScene());
 
@@ -66,11 +67,11 @@ public class Navigation {
     }
     
     // Load live auction INSIDE dashboard content area (keeps sidebar visible)
-    public static void goToLiveAuction(String auctionId, String userId, String returnTo) {
+    public static void goToLiveAuction(String auctionId, String userId, String role, String returnTo) {
 
         if (dashboard != null) {
             // Load within dashboard
-            LiveAuctionPanel view = new LiveAuctionPanel(auctionId, userId);
+            LiveAuctionPanel view = new LiveAuctionPanel(auctionId, userId, role);
             LiveAuctionController controller = new LiveAuctionController(view, auctionId, userId);
 
             // Back button returns to the correct list
@@ -94,7 +95,7 @@ public class Navigation {
 
         } else {
             // Fallback: new scene
-            LiveAuctionPanel view = new LiveAuctionPanel(auctionId, userId);
+            LiveAuctionPanel view = new LiveAuctionPanel(auctionId, userId, role);
             new LiveAuctionController(view, auctionId, userId);
             stage.setScene(new Scene(view.getView(), 1100, 700));
         }

@@ -18,7 +18,7 @@ public class AuctionDAO {
 
 	    String updateAuctionSQL = """
 	        UPDATE auctions 
-	        SET status='CLOSED', winner_id=? 
+	        SET status='CLOSED', winner_id=?, winner_confirmed=0 
 	        WHERE auction_id=?
 	    """;
 
@@ -233,11 +233,9 @@ public class AuctionDAO {
         return sb.toString();
     }
     
-    public String createAuction(String carId, double minBid) {
-
         String sql = """
-            INSERT INTO auctions (auction_id, car_id, min_bid, current_bid, status)
-            VALUES (?, ?, ?, ?, 'ACTIVE')
+            INSERT INTO auctions (auction_id, car_id, min_bid, current_bid, status, duration_minutes)
+            VALUES (?, ?, 0, 0, 'PENDING', 5)
         """;
 
         try (Connection con = DBConnection.getConnection();
@@ -247,39 +245,9 @@ public class AuctionDAO {
 
             ps.setString(1, auctionId);
             ps.setString(2, carId);
-            ps.setDouble(3, minBid);
-            ps.setDouble(4, minBid);
 
             ps.executeUpdate();
-
-            // Get car title for notification
-            String carTitle = "a car";
-            String getTitle = "SELECT title FROM car WHERE car_id=?";
-            try (PreparedStatement ps2 = con.prepareStatement(getTitle)) {
-                ps2.setString(1, carId);
-                ResultSet rs2 = ps2.executeQuery();
-                if (rs2.next()) {
-                    carTitle = rs2.getString("title");
-                }
-            }
-
-            // Notify all watchlist watchers about the new auction
-            NotificationDAO notifDAO = new NotificationDAO();
-            WatchlistDAO watchlistDAO = new WatchlistDAO();
-
-            try {
-                // Schedule auction closing 5 minutes later
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        new AuctionDAO().closeAuction(auctionId);
-                    }
-                }, 5 * 60 * 1000); // 5 minutes
-            } catch (Exception t) {
-                // Ignore timer initialization errors
-            }
-
+            
             return "SUCCESS:AuctionCreated:" + auctionId;
 
         } catch (Exception e) {
@@ -287,6 +255,84 @@ public class AuctionDAO {
         }
 
         return "FAILED:AuctionError";
+    }
+
+    public boolean approveAuction(String auctionId, double minBid, int duration) {
+        String sql = """
+            UPDATE auctions 
+            SET min_bid=?, current_bid=?, status='ACTIVE', 
+                duration_minutes=?, end_time=DATE_ADD(NOW(), INTERVAL ? MINUTE)
+            WHERE auction_id=?
+        """;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setDouble(1, minBid);
+            ps.setDouble(2, minBid);
+            ps.setInt(3, duration);
+            ps.setInt(4, duration);
+            ps.setString(5, auctionId);
+
+            int affected = ps.executeUpdate();
+            if (affected > 0) {
+                // Start timer
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        new AuctionDAO().closeAuction(auctionId);
+                    }
+                }, (long) duration * 60 * 1000);
+                return true;
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean confirmWinner(String auctionId) {
+        String sql = "UPDATE auctions SET winner_confirmed=1 WHERE auction_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, auctionId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public String getPendingAuctions() {
+        StringBuilder sb = new StringBuilder();
+        String sql = """
+            SELECT a.auction_id, c.title, c.brand, c.model, c.image, c.seller_id
+            FROM auctions a JOIN car c ON a.car_id = c.car_id
+            WHERE a.status='PENDING'
+        """;
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                sb.append(rs.getString("auction_id")).append("|")
+                  .append(rs.getString("title")).append("|")
+                  .append(rs.getString("brand")).append("|")
+                  .append(rs.getString("model")).append("|")
+                  .append(rs.getString("image")).append("|")
+                  .append(rs.getString("seller_id")).append("\n");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return sb.toString();
+    }
+
+    public String getAuctionEndTime(String auctionId) {
+        String sql = "SELECT end_time FROM auctions WHERE auction_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, auctionId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Timestamp ts = rs.getTimestamp("end_time");
+                return ts != null ? ts.toString() : "NONE";
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return "NONE";
     }
 	
 	public String getMyAuctions(String sellerId) {
@@ -377,7 +423,8 @@ public class AuctionDAO {
 	                rs.getDouble("min_bid") + "|" +
 	                rs.getString("status") + "|" +
 	                (rs.getString("winner_id") != null ? rs.getString("winner_id") : "N/A") + "|" +
-	                rs.getString("seller_id") + "\n"
+	                rs.getString("seller_id") + "|" +
+	                rs.getInt("winner_confirmed") + "\n"
 	            );
 	        }
 

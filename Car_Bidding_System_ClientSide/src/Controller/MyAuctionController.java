@@ -8,10 +8,12 @@ public class MyAuctionController {
 
     private MyAuctionPanel view;
     private String userId;
+    private String role;
 
-    public MyAuctionController(MyAuctionPanel view, String userId) {
+    public MyAuctionController(MyAuctionPanel view, String userId, String role) {
         this.view = view;
         this.userId = userId;
+        this.role = role;
 
         handleClose();
         load();
@@ -43,7 +45,7 @@ public class MyAuctionController {
         });
 
         view.setOnWatchLive(auctionId -> {
-            Controller.Navigation.goToLiveAuction(auctionId, userId, "MY_AUCTIONS");
+            Controller.Navigation.goToLiveAuction(auctionId, userId, role, "MY_AUCTIONS");
         });
     }
 }
