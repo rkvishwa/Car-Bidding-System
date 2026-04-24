@@ -17,12 +17,14 @@ public class AdminPendingCarsPanel {
     private FlowPane grid = new FlowPane();
     private Consumer<String> onApprove;
     private Consumer<String> onReject;
+    
+    private Label countLabel = new Label();
 
     public VBox getView() {
 
         VBox root = new VBox(20);
         root.setPadding(new Insets(25));
-        root.setStyle("-fx-background-color: #f0f2f5;");
+        root.setStyle("-fx-background-color: transparent;");
 
         // ===== HEADER =====
         HBox headerRow = new HBox(15);
@@ -35,8 +37,8 @@ public class AdminPendingCarsPanel {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Label countLabel = new Label();
-        countLabel.setId("pendingCount");
+//        Label countLabel = new Label();
+//        countLabel.setId("pendingCount");
         countLabel.setStyle(
             "-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;" +
             "-fx-background-color: #FF9800; -fx-background-radius: 12;" +
@@ -70,9 +72,11 @@ public class AdminPendingCarsPanel {
         grid.getChildren().clear();
 
         // Update count label
-        Label countLabel = (Label) grid.getScene() != null ? null : null;
+//        Label countLabel = (Label) grid.getScene() != null ? null : null;
 
         if (res == null || res.trim().isEmpty()) {
+        	
+        	countLabel.setText("0 pending");
             VBox emptyState = new VBox(10);
             emptyState.setAlignment(Pos.CENTER);
             emptyState.setPadding(new Insets(60));
@@ -96,7 +100,7 @@ public class AdminPendingCarsPanel {
             if (row.trim().isEmpty()) continue;
 
             String[] d = row.split("\\|");
-            if (d.length < 9) continue;
+            if (d.length < 7) continue;
 
             // d[0]=carId, d[1]=sellerId, d[2]=title, d[3]=brand, d[4]=model,
             // d[5]=year, d[6]=price, d[7]=description, d[8]=image, d[9]=createdAt
@@ -104,6 +108,8 @@ public class AdminPendingCarsPanel {
             grid.getChildren().add(createCard(d));
             count++;
         }
+        
+        countLabel.setText(count + " pending");
     }
 
     private VBox createCard(String[] d) {

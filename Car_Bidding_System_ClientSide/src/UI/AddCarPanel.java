@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
 import java.time.Year;
 import java.util.function.Consumer;
 
@@ -27,7 +28,7 @@ public class AddCarPanel {
     private Label msg = new Label();
 
     private Consumer<AddCarData> onAddCar;
-    
+
     public AddCarPanel(String sellerId) {
         this.sellerId = sellerId;
     }
@@ -36,7 +37,7 @@ public class AddCarPanel {
 
         VBox root = new VBox(20);
         root.setPadding(new Insets(25));
-        root.setStyle("-fx-background-color: #f0f2f5;");
+        root.setStyle("-fx-background-color: transparent;");
         root.setAlignment(Pos.TOP_CENTER);
 
         // ===== HEADER =====
@@ -55,8 +56,8 @@ public class AddCarPanel {
         formCard.setPadding(new Insets(30));
         formCard.setMaxWidth(500);
         formCard.setStyle(
-            "-fx-background-color: white;" +
-            "-fx-background-radius: 16;"
+                "-fx-background-color: white;" +
+                "-fx-background-radius: 16;"
         );
 
         DropShadow shadow = new DropShadow();
@@ -66,13 +67,13 @@ public class AddCarPanel {
         formCard.setEffect(shadow);
 
         // Style inputs
-        String inputStyle = 
-            "-fx-background-radius: 8;" +
-            "-fx-border-radius: 8;" +
-            "-fx-border-color: #E5E7EB;" +
-            "-fx-background-color: #F9FAFB;" +
-            "-fx-padding: 10 14;" +
-            "-fx-font-size: 13px;";
+        String inputStyle =
+                "-fx-background-radius: 8;" +
+                "-fx-border-radius: 8;" +
+                "-fx-border-color: #E5E7EB;" +
+                "-fx-background-color: #F9FAFB;" +
+                "-fx-padding: 10 14;" +
+                "-fx-font-size: 13px;";
 
         titleField.setPromptText("Car Title (e.g. 2024 BMW M3)");
         titleField.setStyle(inputStyle);
@@ -96,14 +97,15 @@ public class AddCarPanel {
         imageField.setStyle(inputStyle);
 
         addBtn.setStyle(
-            "-fx-background-color: #16A34A;" +
-            "-fx-text-fill: white;" +
-            "-fx-font-size: 15px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-background-radius: 8;" +
-            "-fx-padding: 12 30;" +
-            "-fx-cursor: hand;"
+                "-fx-background-color: #16A34A;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 15px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8;" +
+                "-fx-padding: 12 30;" +
+                "-fx-cursor: hand;"
         );
+
         addBtn.setMaxWidth(Double.MAX_VALUE);
 
         addBtn.setOnAction(e -> {
@@ -148,6 +150,7 @@ public class AddCarPanel {
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
         VBox centered = new VBox(formCard);
@@ -194,7 +197,8 @@ public class AddCarPanel {
         try {
             int y = Integer.parseInt(yearField.getText());
             int now = Year.now().getValue();
-            if (y < 1900 || y > now + 1) return error("Invalid year (1900-" + (now + 1) + ")");
+            if (y < 1900 || y > now + 1)
+                return error("Invalid year (1900-" + (now + 1) + ")");
         } catch (Exception e) {
             return error("Year must be a number");
         }

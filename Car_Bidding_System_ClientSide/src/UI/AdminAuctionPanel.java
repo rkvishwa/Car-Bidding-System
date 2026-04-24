@@ -22,7 +22,7 @@ public class AdminAuctionPanel {
 
         VBox root = new VBox(20);
         root.setPadding(new Insets(25));
-        root.setStyle("-fx-background-color: #f0f2f5;");
+        root.setStyle("-fx-background-color: transparent;");
 
         // ===== HEADER =====
         Label title = new Label("📦 All Auctions");

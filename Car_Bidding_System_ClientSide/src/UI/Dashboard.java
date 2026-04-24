@@ -186,7 +186,7 @@ public class Dashboard {
         }
 
         // ===== CONTENT =====
-        contentArea.setStyle("-fx-background-color: #F8F9FA; -fx-padding: 0;");
+        contentArea.setStyle("-fx-background-color: #f0f2f5;");
         contentArea.setSpacing(0);
 
         HBox root = new HBox(sidebar, contentArea);

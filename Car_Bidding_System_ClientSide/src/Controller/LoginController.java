@@ -1,6 +1,5 @@
 package Controller;
 
-import Client.Client;
 import Client.ClientManager;
 import Event.AdminSession;
 import UI.*;

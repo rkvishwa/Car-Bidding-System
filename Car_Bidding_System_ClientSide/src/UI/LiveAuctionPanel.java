@@ -36,7 +36,7 @@ public class LiveAuctionPanel {
     public VBox getView() {
 
         VBox root = new VBox(0);
-        root.setStyle("-fx-background-color: #f0f2f5;");
+        root.setStyle("-fx-background-color: transparent;");
 
         // ===== BACK BUTTON =====
         backBtn.setStyle(

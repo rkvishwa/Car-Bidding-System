@@ -18,7 +18,7 @@ public class AdminAuditLogPanel {
 
         VBox root = new VBox(18);
         root.setPadding(new Insets(25));
-        root.setStyle("-fx-background-color: #f0f2f5;");
+        root.setStyle("-fx-background-color: transparent;");
 
         // ===== HEADER =====
         Label title = new Label("📜 Audit Logs");

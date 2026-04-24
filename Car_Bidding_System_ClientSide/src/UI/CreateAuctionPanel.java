@@ -23,7 +23,7 @@ public class CreateAuctionPanel {
     public CreateAuctionPanel(String sellerId) {
 
         root.setPadding(new Insets(25));
-        root.setStyle("-fx-background-color: #f0f2f5;");
+        root.setStyle("-fx-background-color: transparent;");
 
         // ===== HEADER =====
         Label title = new Label("➕ Create Auction");

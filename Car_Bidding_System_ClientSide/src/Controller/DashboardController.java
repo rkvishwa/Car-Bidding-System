@@ -1,11 +1,14 @@
 package Controller;
 
-import Event.Event;
-import Event.EventBus;
+
 import UI.*;
 import javafx.application.Platform;
 
 import java.util.function.Consumer;
+
+import Event.AdminSession;
+import Event.Event;
+import Event.EventBus;
 
 public class DashboardController {
 
@@ -263,7 +266,7 @@ public class DashboardController {
         // ===== LOGOUT =====
         view.logoutBtn.setOnAction(e -> {
             cleanup();
-            Event.AdminSession.set(null, null);
+            AdminSession.set(null, null);
             Navigation.goToLogin();
         });
     }

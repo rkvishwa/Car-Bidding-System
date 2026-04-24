@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="D:/In iNet/Second Year/First Sem/Apply/ApplyProgrammingWorkspace/Car_Bidding_System_ServerSide/jar/mysql-connector-j-9.5.0.jar"/>
+	<classpathentry kind="lib" path="D:/In iNet/Second Year/First Sem/Apply/ApplyProgrammingWorkspace/Car_Bidding_System_ServerSide1/jar/junit-platform-console-standalone-1.11.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
