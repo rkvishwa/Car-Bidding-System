@@ -41,5 +41,9 @@ public class MyAuctionController {
                 e.printStackTrace();
             }
         });
+
+        view.setOnWatchLive(auctionId -> {
+            Controller.Navigation.goToLiveAuction(auctionId, userId, "MY_AUCTIONS");
+        });
     }
 }

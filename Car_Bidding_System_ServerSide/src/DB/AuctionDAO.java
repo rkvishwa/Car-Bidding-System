@@ -1,6 +1,8 @@
 package DB;
 
 import java.sql.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AuctionDAO {
 
@@ -264,6 +266,19 @@ public class AuctionDAO {
             // Notify all watchlist watchers about the new auction
             NotificationDAO notifDAO = new NotificationDAO();
             WatchlistDAO watchlistDAO = new WatchlistDAO();
+
+            try {
+                // Schedule auction closing 5 minutes later
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        new AuctionDAO().closeAuction(auctionId);
+                    }
+                }, 5 * 60 * 1000); // 5 minutes
+            } catch (Exception t) {
+                // Ignore timer initialization errors
+            }
 
             return "SUCCESS:AuctionCreated:" + auctionId;
 

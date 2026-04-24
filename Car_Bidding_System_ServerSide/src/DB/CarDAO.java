@@ -143,7 +143,7 @@ public class CarDAO {
             String sql = """
                 SELECT car_id, title, brand, model, image, year, price_start 
                 FROM car 
-                WHERE seller_id=? AND status='APPROVED'
+                WHERE seller_id=? AND status='APPROVED' AND car_id NOT IN (SELECT car_id FROM auctions)
             """;
 
             PreparedStatement ps = con.prepareStatement(sql);

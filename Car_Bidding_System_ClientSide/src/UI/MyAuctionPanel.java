@@ -17,9 +17,14 @@ public class MyAuctionPanel {
     private VBox liveSection = new VBox(12);
     private VBox closedSection = new VBox(12);
     private Consumer<String> onClose;
+    private Consumer<String> onWatchLive;
 
     public void setOnClose(Consumer<String> onClose) {
         this.onClose = onClose;
+    }
+
+    public void setOnWatchLive(Consumer<String> onWatchLive) {
+        this.onWatchLive = onWatchLive;
     }
 
     public VBox getView() {
@@ -247,7 +252,25 @@ public class MyAuctionPanel {
                 }
             });
 
-            rightSide.getChildren().addAll(statusBadge, closeBtn);
+            // Watch Live button for active auctions
+            Button watchBtn = new Button("👀 Watch Live");
+            watchBtn.setStyle(
+                "-fx-background-color: #1976D2;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 11px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8;" +
+                "-fx-padding: 8 14;" +
+                "-fx-cursor: hand;"
+            );
+
+            watchBtn.setOnAction(e -> {
+                if (onWatchLive != null) {
+                    onWatchLive.accept(auctionId);
+                }
+            });
+
+            rightSide.getChildren().addAll(statusBadge, watchBtn, closeBtn);
 
         } else {
             statusBadge.setText("CLOSED");

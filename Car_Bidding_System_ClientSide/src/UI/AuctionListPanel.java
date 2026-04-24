@@ -253,7 +253,7 @@ public class AuctionListPanel {
         );
 
         openBtn.setOnAction(e -> {
-            Controller.Navigation.goToLiveAuction(id, userId);
+            Controller.Navigation.goToLiveAuction(id, userId, "AUCTION_LIST");
         });
 
         // Hover

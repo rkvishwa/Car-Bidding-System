@@ -94,6 +94,7 @@ public class NotificationsPanel {
 
                 Label emptyIcon = new Label("🔔");
                 emptyIcon.setFont(Font.font(48));
+                emptyIcon.setStyle("-fx-text-fill: #999;"); // Fix text color for white themes
 
                 Label empty = new Label("No notifications yet");
                 empty.setStyle("-fx-text-fill: #999; -fx-font-size: 16px;");
@@ -167,6 +168,7 @@ public class NotificationsPanel {
         icon.setFont(Font.font(22));
         icon.setMinWidth(36);
         icon.setAlignment(Pos.CENTER);
+        icon.setStyle("-fx-text-fill: #333;"); // Ensure icon emoji is not painted white
 
         // ===== ICON CIRCLE =====
         StackPane iconCircle = new StackPane(icon);

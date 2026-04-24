@@ -66,22 +66,28 @@ public class Navigation {
     }
     
     // Load live auction INSIDE dashboard content area (keeps sidebar visible)
-    public static void goToLiveAuction(String auctionId, String userId) {
+    public static void goToLiveAuction(String auctionId, String userId, String returnTo) {
 
         if (dashboard != null) {
             // Load within dashboard
             LiveAuctionPanel view = new LiveAuctionPanel(auctionId, userId);
             LiveAuctionController controller = new LiveAuctionController(view, auctionId, userId);
 
-            // Back button returns to auction list
+            // Back button returns to the correct list
             view.backBtn.setOnAction(e -> {
                 // Cleanup live auction listener
                 controller.cleanup();
 
-                // Reload auctions
-                UI.AuctionListPanel panel = new UI.AuctionListPanel(userId);
-                new AuctionController(panel, userId);
-                dashboard.contentArea.getChildren().setAll(panel.getView());
+                if ("MY_AUCTIONS".equals(returnTo)) {
+                    UI.MyAuctionPanel panel = new UI.MyAuctionPanel();
+                    new MyAuctionController(panel, userId);
+                    dashboard.contentArea.getChildren().setAll(panel.getView());
+                } else {
+                    // Reload auctions
+                    UI.AuctionListPanel panel = new UI.AuctionListPanel(userId);
+                    new AuctionController(panel, userId);
+                    dashboard.contentArea.getChildren().setAll(panel.getView());
+                }
             });
 
             dashboard.contentArea.getChildren().setAll(view.getView());
