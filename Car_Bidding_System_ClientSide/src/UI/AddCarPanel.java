@@ -87,7 +87,7 @@ public class AddCarPanel {
         yearField.setPromptText("Year (e.g. 2024)");
         yearField.setStyle(inputStyle);
 
-        priceField.setPromptText("Starting Price (MMK)");
+        priceField.setPromptText("Starting Price (e.g. 1230k = 1,230,000 MMK)");
         priceField.setStyle(inputStyle);
 
         descField.setPromptText("Description");
@@ -118,7 +118,7 @@ public class AddCarPanel {
                         brandField.getText(),
                         modelField.getText(),
                         yearField.getText(),
-                        priceField.getText(),
+                        parsePrice(priceField.getText()),
                         descField.getText(),
                         imageField.getText()
                 ));
@@ -204,13 +204,26 @@ public class AddCarPanel {
         }
 
         try {
-            double p = Double.parseDouble(priceField.getText());
+            double p = Double.parseDouble(parsePrice(priceField.getText()));
             if (p <= 0) return error("Price must be positive");
         } catch (Exception e) {
-            return error("Price must be a valid number");
+            return error("Price must be a valid number (e.g. 1230k or 1230000)");
         }
 
         return true;
+    }
+
+    private String parsePrice(String price) {
+        String p = price.trim().toLowerCase();
+        if (p.endsWith("k")) {
+            try {
+                double val = Double.parseDouble(p.substring(0, p.length() - 1));
+                return String.format("%.0f", val * 1000);
+            } catch (Exception e) {
+                return price;
+            }
+        }
+        return price;
     }
 
     private boolean error(String msgText) {

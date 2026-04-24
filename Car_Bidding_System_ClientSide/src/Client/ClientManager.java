@@ -106,7 +106,8 @@ public class ClientManager {
                 }
             }
 
-            return lastResponse;
+            // Decode <<NL>> markers back to real newlines for multi-line responses
+            return lastResponse.replace("<<NL>>", "\n");
         }
     }
 

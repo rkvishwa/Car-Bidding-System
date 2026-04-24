@@ -19,7 +19,7 @@ public class AdminController {
 	}
 	public static void handleCars(AdminPendingCarsPanel view) {
 
-	    String adminId = AdminSession.getAdminId();
+	    String adminId = AdminSession.getAdminName();
 
 	    view.onApprove(id -> {
 	        try {
@@ -54,7 +54,7 @@ public class AdminController {
 
 	    view.onClose(id -> {
 	        try {
-	            AuctionService.stopAuction(id, AdminSession.getAdminId());
+	            AuctionService.stopAuction(id, AdminSession.getAdminName());
 
 	            // Refresh after stop
 	            String res = AuctionService.getAuctionsDetailed();
@@ -77,8 +77,7 @@ public class AdminController {
 
 	    view.onBan(id -> {
 	        try {
-	            UserService.banUser(id, AdminSession.getAdminId());
-	            System.out.println(AdminSession.getAdminId());//DEBUGGING
+	            UserService.banUser(id, AdminSession.getAdminName());
 	            view.render(UserService.getUsers());
 	        } catch (Exception e) {
 	            e.printStackTrace();
@@ -87,7 +86,7 @@ public class AdminController {
 
 	    view.onMakeAdmin(id -> {
 	        try {
-	            UserService.makeAdmin(id, AdminSession.getAdminId());
+	            UserService.makeAdmin(id, AdminSession.getAdminName());
 	            view.render(UserService.getUsers());
 	        } catch (Exception e) {
 	            e.printStackTrace();

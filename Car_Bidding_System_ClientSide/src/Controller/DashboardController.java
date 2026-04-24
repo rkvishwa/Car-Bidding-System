@@ -35,7 +35,7 @@ public class DashboardController {
             "-fx-padding: 10 15;" +
             "-fx-background-radius: 8;";
 
-    public DashboardController(Dashboard view, String role, String userId) {
+    public DashboardController(Dashboard view, String role, String userId, String name) {
         this.view = view;
         this.role = role;
         this.userId = userId;

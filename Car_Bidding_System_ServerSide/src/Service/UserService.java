@@ -32,7 +32,7 @@ public class UserService {
         try {
             Connection con = DBConnection.getConnection();
 
-            String sql = "SELECT user_id, role FROM users WHERE email=? AND password=? AND status='ACTIVE'";
+            String sql = "SELECT user_id, role, name FROM users WHERE email=? AND password=? AND status='ACTIVE'";
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, email);
@@ -41,7 +41,7 @@ public class UserService {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return rs.getString("user_id") + ":" + rs.getString("role");
+                return rs.getString("user_id") + ":" + rs.getString("role") + ":" + rs.getString("name");
             }
 
         } catch (Exception e) {

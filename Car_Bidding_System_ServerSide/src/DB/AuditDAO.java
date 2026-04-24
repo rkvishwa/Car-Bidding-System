@@ -11,7 +11,7 @@ public class AuditDAO {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, "LOG" + System.currentTimeMillis());
+            ps.setString(1, "LOG" + (System.currentTimeMillis() % 100000000));
             ps.setString(2, adminId);
             ps.setString(3, action);
             ps.setString(4, targetId);

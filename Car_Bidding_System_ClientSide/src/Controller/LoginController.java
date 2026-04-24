@@ -34,12 +34,13 @@ public class LoginController {
     	            String[] data = resp.split(":");
     	            String userId = data[0];
     	            String role = data[1];
+    	            String name = data.length > 2 ? data[2] : userId;
     	            
     	            if (role.equals("ADMIN")) {
-    	                AdminSession.set(userId,role);
+    	                AdminSession.set(userId, role, name);
     	            }
     	            System.out.println("ADMIN SESSION = " + AdminSession.getAdminId());
-    	            Navigation.goToDashboard(userId, role);
+    	            Navigation.goToDashboard(userId, role, name);
 
     	        } else {
     	            view.message.setTextFill(Color.RED);

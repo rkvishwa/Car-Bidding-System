@@ -72,9 +72,7 @@ public class UserDAO {
     }
     
     public String getAllUsers() {
-
-        String sql = "SELECT user_id, name, role FROM users WHERE status='ACTIVE'";
-
+        String sql = "SELECT user_id, name, role, status FROM users";
         StringBuilder sb = new StringBuilder();
 
         try (Connection con = DBConnection.getConnection();
@@ -87,6 +85,8 @@ public class UserDAO {
                   .append(rs.getString("name"))
                   .append("|")
                   .append(rs.getString("role"))
+                  .append("|")
+                  .append(rs.getString("status"))
                   .append("\n");
             }
 

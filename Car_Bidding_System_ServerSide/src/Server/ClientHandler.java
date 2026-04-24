@@ -358,6 +358,8 @@ public class ClientHandler extends Thread {
                     response = "ERROR:" + e.getMessage();
                 }
 
+                // Replace newlines with <<NL>> so multi-line responses are sent as a single line
+                response = response.replace("\n", "<<NL>>");
                 out.println(response);
                 out.flush();
             }

@@ -13,15 +13,28 @@ public class AddCarController {
     	view.onAddCar(data -> {
 
     	    try {
+    	        // Sanitize inputs to prevent breaking the parsing logic
+    	        String cleanTitle = data.title.replace("\n", " ").replace("|", " ").replace(":", " ");
+    	        String cleanBrand = data.brand.replace("\n", " ").replace("|", " ").replace(":", " ");
+    	        String cleanModel = data.model.replace("\n", " ").replace("|", " ").replace(":", " ");
+    	        String cleanDesc = data.description.replace("\n", " ").replace("|", " ").replace(":", " ");
+    	        String cleanImage = data.image.replace("\n", " ").replace("|", " ").replace(":", " ");
+    	        
+    	        // Parse price mapping 'k' to '000'
+    	        String parsedPrice = data.price.toLowerCase().trim();
+    	        if (parsedPrice.endsWith("k")) {
+    	            parsedPrice = parsedPrice.replace("k", "000");
+    	        }
+
     	        String res = CarService.addCar(
     	                data.sellerId,
-    	                data.title,
-    	                data.brand,
-    	                data.model,
+    	                cleanTitle,
+    	                cleanBrand,
+    	                cleanModel,
     	                data.year,
-    	                data.price,
-    	                data.description,
-    	                data.image
+    	                parsedPrice,
+    	                cleanDesc,
+    	                cleanImage
     	        );
 
     	        if (res != null && res.startsWith("SUCCESS")) {

@@ -169,9 +169,16 @@ public class CreateAuctionPanel {
 
         // Additional info if available
         if (d.length > 5) {
+            String displayPrice = d.length > 6 ? d[6] : "";
+            try {
+                double p = Double.parseDouble(displayPrice);
+                if (p >= 1000 && p % 1000 == 0) displayPrice = String.format("%.0fk", p / 1000);
+                else if (p >= 1000 && p % 100 == 0) displayPrice = String.format("%.1fk", p / 1000);
+            } catch (Exception e) {}
+            
             Label yearPrice = new Label(
                 (d.length > 5 ? "Year: " + d[5] : "") +
-                (d.length > 6 ? "  |  Price: " + d[6] + " MMK" : "")
+                (d.length > 6 ? "  |  Price: " + displayPrice + " MMK" : "")
             );
             yearPrice.setStyle("-fx-text-fill: #666; -fx-font-size: 11px;");
             details.getChildren().add(yearPrice);
@@ -204,7 +211,10 @@ public class CreateAuctionPanel {
         cardMsg.setStyle("-fx-font-size: 11px;");
 
         btn.setOnAction(e -> {
-            String bidText = bidField.getText().trim();
+            String bidText = bidField.getText().trim().toLowerCase();
+            if (bidText.endsWith("k")) {
+                bidText = bidText.replace("k", "000");
+            }
             if (bidText.isEmpty()) {
                 cardMsg.setText("⚠ Please enter minimum bid");
                 cardMsg.setTextFill(Color.web("#D32F2F"));

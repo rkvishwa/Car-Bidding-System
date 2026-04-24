@@ -89,16 +89,23 @@ public class CarDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
+                String safeDesc = (rs.getString("description") != null ? rs.getString("description") : "No description")
+                        .replace("\n", " ")
+                        .replace("|", " ");
+                String safeImage = (rs.getString("image") != null ? rs.getString("image") : "")
+                        .replace("\n", " ")
+                        .replace("|", " ");
+
                 sb.append(
                     rs.getString("car_id") + "|" +
                     rs.getString("seller_id") + "|" +
-                    rs.getString("title") + "|" +
-                    rs.getString("brand") + "|" +
-                    rs.getString("model") + "|" +
+                    rs.getString("title").replace("\n", " ").replace("|", " ") + "|" +
+                    rs.getString("brand").replace("\n", " ").replace("|", " ") + "|" +
+                    rs.getString("model").replace("\n", " ").replace("|", " ") + "|" +
                     rs.getInt("year") + "|" +
                     rs.getDouble("price_start") + "|" +
-                    (rs.getString("description") != null ? rs.getString("description") : "No description") + "|" +
-                    (rs.getString("image") != null ? rs.getString("image") : "") + "|" +
+                    safeDesc + "|" +
+                    safeImage + "|" +
                     rs.getString("created_at") + "\n"
                 );
             }
@@ -147,10 +154,10 @@ public class CarDAO {
             while (rs.next()) {
                 sb.append(
                     rs.getString("car_id") + "|" +
-                    rs.getString("title") + "|" +
-                    rs.getString("brand") + "|" +
-                    rs.getString("model") + "|" +
-                    rs.getString("image") + "|" +
+                    rs.getString("title").replace("\n", " ").replace("|", " ") + "|" +
+                    rs.getString("brand").replace("\n", " ").replace("|", " ") + "|" +
+                    rs.getString("model").replace("\n", " ").replace("|", " ") + "|" +
+                    (rs.getString("image") != null ? rs.getString("image").replace("\n", " ").replace("|", " ") : "") + "|" +
                     rs.getInt("year") + "|" +
                     rs.getDouble("price_start")
                 ).append("\n");
@@ -194,10 +201,10 @@ public class CarDAO {
 
                 sb.append(
                     rs.getString("car_id") + "|" +
-                    rs.getString("title") + "|" +
-                    rs.getString("brand") + "|" +
-                    rs.getString("model") + "|" +
-                    rs.getString("image") + "|" +
+                    rs.getString("title").replace("\n", " ").replace("|", " ") + "|" +
+                    rs.getString("brand").replace("\n", " ").replace("|", " ") + "|" +
+                    rs.getString("model").replace("\n", " ").replace("|", " ") + "|" +
+                    (rs.getString("image") != null ? rs.getString("image").replace("\n", " ").replace("|", " ") : "") + "|" +
                     rs.getString("status") + "|" +
                     rs.getString("created_at") + "|" +
                     rs.getInt("year") + "|" +

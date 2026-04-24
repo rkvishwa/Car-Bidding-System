@@ -77,14 +77,16 @@ public class AdminUserPanel {
 
             String[] d = row.split("\\|");
             if (d.length < 3) continue;
+            
+            String status = d.length > 3 ? d[3] : "ACTIVE";
 
-            // d[0]=userId, d[1]=name, d[2]=role
-            list.getChildren().add(createCard(d[0], d[1], d[2]));
+            // d[0]=userId, d[1]=name, d[2]=role, d[3]=status
+            list.getChildren().add(createCard(d[0], d[1], d[2], status));
             count++;
         }
     }
 
-    private HBox createCard(String userId, String name, String role) {
+    private HBox createCard(String userId, String name, String role, String status) {
 
         HBox card = new HBox(16);
         card.setPadding(new Insets(14, 20, 14, 20));
@@ -165,8 +167,23 @@ public class AdminUserPanel {
             "-fx-text-fill: " + roleColor + ";" +
             "-fx-background-radius: 12;"
         );
+        
+        HBox badges = new HBox(8, roleBadge);
+        
+        if ("BANNED".equals(status)) {
+            Label bannedBadge = new Label("BANNED");
+            bannedBadge.setPadding(new Insets(3, 10, 3, 10));
+            bannedBadge.setFont(Font.font("System", FontWeight.BOLD, 10));
+            bannedBadge.setStyle(
+                "-fx-background-color: #FFEBEE;" +
+                "-fx-text-fill: #D32F2F;" +
+                "-fx-background-radius: 12;"
+            );
+            badges.getChildren().add(bannedBadge);
+            card.setOpacity(0.5);
+        }
 
-        info.getChildren().addAll(nameLabel, idLabel, roleBadge);
+        info.getChildren().addAll(nameLabel, idLabel, badges);
 
         // ===== ACTIONS =====
         HBox actions = new HBox(8);
@@ -206,11 +223,13 @@ public class AdminUserPanel {
                 onBan.accept(userId);
                 card.setDisable(true);
                 card.setOpacity(0.5);
+                banBtn.setText("Banned");
+                banBtn.setDisable(true);
             }
         });
 
-        // Don't allow banning admins
-        if (role.equals("ADMIN")) {
+        // Don't allow banning admins or already banned users
+        if (role.equals("ADMIN") || "BANNED".equals(status)) {
             banBtn.setDisable(true);
             banBtn.setStyle(
                 "-fx-background-color: #e0e0e0;" +
@@ -219,6 +238,9 @@ public class AdminUserPanel {
                 "-fx-background-radius: 8;" +
                 "-fx-padding: 7 14;"
             );
+            if ("BANNED".equals(status)) {
+            	banBtn.setText("Banned");
+            }
         }
 
         actions.getChildren().add(banBtn);

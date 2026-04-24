@@ -47,13 +47,13 @@ public class Navigation {
         stage.setScene(view.getScene());
     }
 
-    public static void goToDashboard(String userId, String role) {
+    public static void goToDashboard(String userId, String role, String name) {
     	System.out.println("STEP 1: Dashboard opening");
 
         System.out.println("Opening dashboard...");
 
-        Dashboard view = new Dashboard(role, userId);
-        DashboardController controller = new DashboardController(view, role, userId);
+        Dashboard view = new Dashboard(role, userId, name);
+        DashboardController controller = new DashboardController(view, role, userId, name);
 
         // Store references for cleanup
         dashboardController = controller;

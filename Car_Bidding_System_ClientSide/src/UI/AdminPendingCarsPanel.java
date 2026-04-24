@@ -169,7 +169,14 @@ public class AdminPendingCarsPanel {
         Label info = new Label(d[3] + " • " + d[4] + " • " + d[5]);
         info.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
-        Label priceLabel = new Label("💰 " + d[6] + " MMK");
+        String displayPrice = d[6];
+        try {
+            double p = Double.parseDouble(d[6]);
+            if (p >= 1000 && p % 1000 == 0) displayPrice = String.format("%.0fk", p / 1000);
+            else if (p >= 1000 && p % 100 == 0) displayPrice = String.format("%.1fk", p / 1000);
+        } catch (Exception e) {}
+        
+        Label priceLabel = new Label("💰 " + displayPrice + " MMK");
         priceLabel.setStyle("-fx-text-fill: #1976D2; -fx-font-weight: bold; -fx-font-size: 14px;");
 
         Label sellerLabel = new Label("👤 Seller: " + d[1]);

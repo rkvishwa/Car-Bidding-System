@@ -25,9 +25,9 @@ public class SignUpController {
             try (Client client = new Client("localhost", 5000)) {
 
                 String req = "SIGNUP:"
-                        + view.nameField.getText() + ":"
-                        + view.emailField.getText() + ":"
-                        + view.passwordField.getText() + ":"
+                        + view.nameField.getText().replace(":", " ").replace("|", " ") + ":"
+                        + view.emailField.getText().replace(":", " ") + ":"
+                        + view.passwordField.getText().replace(":", " ") + ":"
                         + view.roleBox.getValue();
 
                 String resp = client.sendRequest(req);

@@ -58,7 +58,7 @@ public class Dashboard {
     	    "-fx-background-radius: 8;" +
     	    "-fx-font-weight: bold;";
 
-    public Dashboard(String role, String userId) {
+    public Dashboard(String role, String userId, String name) {
     	
     	System.out.println("STEP 2: Dashboard UI created");
     	System.out.println("Dashboard UI created");
@@ -134,7 +134,7 @@ public class Dashboard {
         if (role.equals("BUYER")) {
 
             sidebar.getChildren().addAll(
-                createUserBox(userId, role),
+                createUserBox(name, role),
                 sep1,
                 menuLabel,
                 auctionBtn,
@@ -152,7 +152,7 @@ public class Dashboard {
             Label auctionLabel = createSectionLabel("AUCTIONS");
 
             sidebar.getChildren().addAll(
-                createUserBox(userId, role),
+                createUserBox(name, role),
                 sep1,
                 carLabel,
                 addCarBtn,
@@ -171,7 +171,7 @@ public class Dashboard {
             Label adminLabel = createSectionLabel("ADMINISTRATION");
 
             sidebar.getChildren().addAll(
-                createUserBox(userId, role),
+                createUserBox(name, role),
                 sep1,
                 adminLabel,
                 pendingCarsBtn,
@@ -262,7 +262,7 @@ public class Dashboard {
         selectedButton = btn;
     }
     
-    private VBox createUserBox(String userId, String role) {
+    private VBox createUserBox(String name, String role) {
 
         ImageView logo = new ImageView();
         try {
@@ -273,7 +273,7 @@ public class Dashboard {
         logo.setFitHeight(45);
         logo.setPreserveRatio(true);
 
-        Label userLabel = new Label(userId);
+        Label userLabel = new Label(name);
         userLabel.setStyle(
             "-fx-text-fill: white;" +
             "-fx-font-size: 14px;" +

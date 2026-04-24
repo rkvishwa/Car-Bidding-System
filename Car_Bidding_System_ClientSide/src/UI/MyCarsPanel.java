@@ -225,7 +225,17 @@ public class MyCarsPanel {
         info.getChildren().addAll(name, details);
 
         if (!price.isEmpty()) {
-            Label priceLabel = new Label("💰 " + price + " MMK");
+            String displayPrice = price;
+            try {
+                double p = Double.parseDouble(price);
+                if (p >= 1000 && p % 1000 == 0) {
+                    displayPrice = String.format("%.0fk", p / 1000);
+                } else if (p >= 1000 && p % 100 == 0) {
+                    displayPrice = String.format("%.1fk", p / 1000);
+                } 
+            } catch (Exception e) {}
+            
+            Label priceLabel = new Label("💰 " + displayPrice + " MMK");
             priceLabel.setStyle("-fx-text-fill: #1976D2; -fx-font-weight: bold; -fx-font-size: 13px;");
             info.getChildren().add(priceLabel);
         }
