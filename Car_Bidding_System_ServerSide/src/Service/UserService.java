@@ -11,9 +11,9 @@ public class UserService {
 
     private UserDAO userDAO = new UserDAO();
 
-    public boolean register(String name, String email, String password, String role) {
+    public boolean register(String name, String email, String password, String role,String phone) {
         System.out.println("Registering user: " + email);
-        boolean result = userDAO.registerUser(name, email, password, role);
+        boolean result = userDAO.registerUser(name, email, password, role,phone);
         System.out.println("User inserted: " + result);
         return result;
         

@@ -7,8 +7,12 @@ import Util.IDGenerator;
 
 public class UserDAO {
 
-    public boolean registerUser(String name, String email, String password, String role) {
-        String sql = "INSERT INTO users VALUES (?, ?, ?, ?, ?, 'PENDING', ?, NOW(), 0)";
+    public boolean registerUser(String name, String email, String password, String role, String phone) {
+    	String sql = """
+    			INSERT INTO users (
+    			    user_id, name, email, password, role, status, phone, created_at, forgot_password_attempts
+    			) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 0)
+    			""";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -20,7 +24,8 @@ public class UserDAO {
             ps.setString(3, email);
             ps.setString(4, password);
             ps.setString(5, role);
-            ps.setString(6, "0912345678");
+            ps.setString(6, "PENDING");   
+            ps.setString(7, phone);
 
             ps.executeUpdate();
             System.out.println("User Registered!");

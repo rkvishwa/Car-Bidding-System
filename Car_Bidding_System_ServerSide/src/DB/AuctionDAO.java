@@ -1,8 +1,6 @@
 package DB;
 
 import java.sql.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class AuctionDAO {
 
@@ -233,9 +231,13 @@ public class AuctionDAO {
         return sb.toString();
     }
     
+    public String createAuction(String carId, double minBid) {
+    
+
         String sql = """
-            INSERT INTO auctions (auction_id, car_id, min_bid, current_bid, status, duration_minutes)
-            VALUES (?, ?, 0, 0, 'PENDING', 5)
+            INSERT INTO auctions 
+            (auction_id, car_id, min_bid, seller_min_bid, current_bid, status, duration_minutes, start_time)
+            VALUES (?, ?, ?, ?, ?, 'PENDING', 0, NULL)
         """;
 
         try (Connection con = DBConnection.getConnection();
@@ -245,6 +247,9 @@ public class AuctionDAO {
 
             ps.setString(1, auctionId);
             ps.setString(2, carId);
+            ps.setDouble(3, minBid);  // min_bid
+            ps.setDouble(4, minBid);  // seller_min_bid
+            ps.setDouble(5, minBid);  // current_bid
 
             ps.executeUpdate();
             
@@ -255,37 +260,89 @@ public class AuctionDAO {
         }
 
         return "FAILED:AuctionError";
-    }
+}
 
-    public boolean approveAuction(String auctionId, double minBid, int duration) {
-        String sql = """
+
+//    public boolean approveAuction(String auctionId, double minBid, int duration) {
+//        String sql = """
+//            UPDATE auctions 
+//            SET min_bid=?, current_bid=?, status='ACTIVE', 
+//                duration_minutes=?, end_time=DATE_ADD(NOW(), INTERVAL ? MINUTE)
+//            WHERE auction_id=?
+//        """;
+//
+//        try (Connection con = DBConnection.getConnection();
+//             PreparedStatement ps = con.prepareStatement(sql)) {
+//
+//            ps.setDouble(1, minBid);
+//            ps.setDouble(2, minBid);
+//            ps.setInt(3, duration);
+//            ps.setInt(4, duration);
+//            ps.setString(5, auctionId);
+//
+//            int affected = ps.executeUpdate();
+//            if (affected > 0) {
+//                // Start timer
+//                new Timer().schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        new AuctionDAO().closeAuction(auctionId);
+//                    }
+//                }, (long) duration * 60 * 1000);
+//                return true;
+//            }
+//        } catch (Exception e) { e.printStackTrace(); }
+//        return false;
+//    }
+    
+    public boolean approveAuction(String auctionId, double adminMinBid, int duration) {
+
+        String getMinSql = "SELECT min_bid FROM auctions WHERE auction_id=?";
+        
+        String updateSql = """
             UPDATE auctions 
-            SET min_bid=?, current_bid=?, status='ACTIVE', 
-                duration_minutes=?, end_time=DATE_ADD(NOW(), INTERVAL ? MINUTE)
+            SET min_bid=?, current_bid=?, status='ACTIVE',
+                start_time=NOW(),
+                duration_minutes=?, 
+                end_time=DATE_ADD(NOW(), INTERVAL ? MINUTE)
             WHERE auction_id=?
         """;
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection()) {
 
-            ps.setDouble(1, minBid);
-            ps.setDouble(2, minBid);
-            ps.setInt(3, duration);
-            ps.setInt(4, duration);
-            ps.setString(5, auctionId);
+            double sellerMinBid = 0;
 
-            int affected = ps.executeUpdate();
-            if (affected > 0) {
-                // Start timer
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        new AuctionDAO().closeAuction(auctionId);
-                    }
-                }, (long) duration * 60 * 1000);
-                return true;
+            // 🔹 Get seller's min bid
+            try (PreparedStatement ps = con.prepareStatement(getMinSql)) {
+                ps.setString(1, auctionId);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    sellerMinBid = rs.getDouble("min_bid");
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+
+            // ❌ Prevent decreasing
+            if (adminMinBid < sellerMinBid) {
+                return false;
+            }
+
+            // ✅ Use higher value
+            double finalMinBid = Math.max(adminMinBid, sellerMinBid);
+
+            try (PreparedStatement ps = con.prepareStatement(updateSql)) {
+                ps.setDouble(1, finalMinBid);
+                ps.setDouble(2, finalMinBid);
+                ps.setInt(3, duration);
+                ps.setInt(4, duration);
+                ps.setString(5, auctionId);
+
+                return ps.executeUpdate() > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 

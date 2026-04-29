@@ -23,40 +23,29 @@ public class CreateAuctionController {
     private void load() {
         try {
             String res = CarService.getApprovedCars(sellerId);
-            view.renderCars(res);
+            view.render(res);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void handleCreate() {
-        view.createBtn.setOnAction(e -> {
-            String selected = view.carList.getValue();
-            if (selected == null) {
-                view.message.setTextFill(Color.RED);
-                view.message.setText("Please select a car");
-                return;
-            }
+
+        view.onCreateAuction((carId, minBid) -> {
 
             try {
-                // Extract carId from "Title (Brand Model) | ID:carId"
-                String carId = selected.split("ID:")[1].trim();
-                
-                String res = AuctionService.createAuction(carId, "0");
+                String res = AuctionService.createAuction(carId, minBid);
+
                 if (res.startsWith("SUCCESS")) {
-                    view.message.setTextFill(Color.GREEN);
-                    view.message.setText("Submitted for admin approval!");
-                    view.createBtn.setDisable(true);
+                    view.renderSuccess(carId);
                     EventBus.publish(new Event("AUCTION_CREATED", carId));
                 } else {
-                    view.message.setTextFill(Color.RED);
-                    view.message.setText("Failed to create auction.");
+                    view.showError("Failed to create auction");
                 }
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                view.message.setTextFill(Color.RED);
-                view.message.setText("Server error");
+            } catch (Exception e) {
+                e.printStackTrace();
+                view.showError("Server error");
             }
         });
     }

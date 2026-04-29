@@ -211,7 +211,7 @@ public class WatchlistPanel {
             "-fx-cursor: hand;"
         );
         viewBtn.setOnAction(e -> {
-            Controller.Navigation.goToLiveAuction(auctionId, userId);
+            Controller.Navigation.goToLiveAuction(auctionId, userId, "BUYER", "WATCHLIST");
         });
 
         if (!isLive) {

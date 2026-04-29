@@ -3,6 +3,7 @@ package UI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -26,6 +27,7 @@ public class LiveAuctionPanel {
     public Label currentBidLabel = new Label("0");
     public ImageView carImage = new ImageView();
     public VBox bidHistory = new VBox(5);
+    private Label msg = new Label();
 
     private String auctionId;
     private String userId;
@@ -37,7 +39,7 @@ public class LiveAuctionPanel {
         this.role = role;
     }
 
-    public Node getView() {
+    public Parent getView() {
 
         VBox root = new VBox(20);
         root.setPadding(new Insets(25));
@@ -194,6 +196,16 @@ public class LiveAuctionPanel {
             bidRow.getChildren().add(b);
             bidHistory.getChildren().add(bidRow);
         }
+    }
+    
+    public void showMessage(String text) {
+        msg.setText(text);
+        msg.setTextFill(Color.web("#D32F2F"));
+    }
+
+    public void showSuccess(String text) {
+        msg.setText(text);
+        msg.setTextFill(Color.web("#4CAF50"));
     }
 
     public void showWinner(String winnerName, double amount) {

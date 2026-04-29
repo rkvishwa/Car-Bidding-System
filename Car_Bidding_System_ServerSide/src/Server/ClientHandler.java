@@ -56,12 +56,17 @@ public class ClientHandler extends Thread {
                         }
 
                         case "SIGNUP": {
+
+                            if (parts.length < 6) {
+                                response = "ERROR:INVALID_SIGNUP_FORMAT";
+                                break;
+                            }
                             UserService service = new UserService();
 
                             if (service.userExists(parts[1])) {
                                 response = "FAILED:UserExists";
                             } else {
-                                boolean ok = service.register(parts[1], parts[2], parts[3], parts[4]);
+                                boolean ok = service.register(parts[1], parts[2], parts[3], parts[4],parts[5]);
                                 response = ok ? "SUCCESS:Registered" : "FAILED:DBError";
                             }
                             break;
@@ -177,7 +182,8 @@ public class ClientHandler extends Thread {
 
                         case "CREATE_AUCTION": {
                             AuctionDAO dao = new AuctionDAO();
-                            response = dao.createAuction(parts[1], 0);
+                            double minBid = Double.parseDouble(parts[2]);
+                            response = dao.createAuction(parts[1], minBid);
 
                             if (response.startsWith("SUCCESS")) {
                                 broadcast("AUCTION_PENDING");

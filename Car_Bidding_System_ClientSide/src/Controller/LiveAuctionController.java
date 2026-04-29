@@ -80,19 +80,59 @@ public class LiveAuctionController {
         countdownTimeline.play();
     }
 
+//    private void handleBid() {
+//        view.bidBtn.setOnAction(e -> {
+//            String amount = view.bidAmount.getText();
+//            if (amount.isEmpty()) return;
+//            try {
+//                String res = AuctionService.placeBid(auctionId, userId, Double.parseDouble(amount));
+//                if (res.startsWith("SUCCESS")) {
+//                    load();
+//                    view.bidAmount.clear();
+//                }
+//            } catch (Exception ex) { ex.printStackTrace(); }
+//        });
+//    }
+    
     private void handleBid() {
         view.bidBtn.setOnAction(e -> {
-            String amount = view.bidAmount.getText();
-            if (amount.isEmpty()) return;
             try {
-                String res = AuctionService.placeBid(auctionId, userId, Double.parseDouble(amount));
-                if (res.startsWith("SUCCESS")) {
-                    load();
-                    view.bidAmount.clear();
+                String bidText = view.bidAmount.getText().trim();
+
+                if (bidText.isEmpty()) {
+                    view.showMessage("Please enter a bid amount");
+                    return;
                 }
-            } catch (Exception ex) { ex.printStackTrace(); }
+
+                double amount;
+                try {
+                    amount = Double.parseDouble(bidText);
+                } catch (NumberFormatException ex) {
+                    view.showMessage("Invalid bid amount — must be a number");
+                    return;
+                }
+
+                if (amount <= 0) {
+                    view.showMessage("Bid must be a positive number");
+                    return;
+                }
+
+                String res = AuctionService.placeBid(auctionId, userId, amount);
+
+                if (res != null && res.startsWith("SUCCESS")) {
+                    view.showSuccess("✅ Bid placed: " + amount + " MMK");
+                    view.bidAmount.clear();
+                } else {
+                    view.showMessage("❌ Bid failed — must be higher than current bid");
+                }
+
+            } catch (Exception ex) {
+                view.showMessage("Server error — please try again");
+                ex.printStackTrace();
+            }
         });
     }
+
 
     private void handleAuctionEnd() {
         try {

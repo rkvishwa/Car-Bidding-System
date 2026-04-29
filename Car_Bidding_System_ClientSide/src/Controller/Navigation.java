@@ -81,7 +81,7 @@ public class Navigation {
 
                 if ("MY_AUCTIONS".equals(returnTo)) {
                     UI.MyAuctionPanel panel = new UI.MyAuctionPanel();
-                    new MyAuctionController(panel, userId);
+                    new MyAuctionController(panel, userId,role);
                     dashboard.contentArea.getChildren().setAll(panel.getView());
                 } else {
                     // Reload auctions

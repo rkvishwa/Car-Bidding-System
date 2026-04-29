@@ -135,11 +135,12 @@ public class AdminAuctionPanel {
 
         TextField minBidField = new TextField(); minBidField.setPromptText("Min Bid"); minBidField.setPrefWidth(80);
         TextField durationField = new TextField(); durationField.setPromptText("Mins"); durationField.setPrefWidth(60);
+        TextField startTimeField = new TextField();startTimeField.setPromptText("Start: yyyy-MM-dd HH:mm");startTimeField.setPrefWidth(140);
 
         Button approveBtn = new Button("✅ Approve");
         approveBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         approveBtn.setOnAction(e -> {
-            if (onApprove != null) onApprove.accept(new String[]{id, minBidField.getText(), durationField.getText()});
+            if (onApprove != null) onApprove.accept(new String[]{id, minBidField.getText(), durationField.getText(),startTimeField.getText()});
         });
 
         card.getChildren().addAll(info, minBidField, durationField, approveBtn);
@@ -211,7 +212,7 @@ public class AdminAuctionPanel {
             Button watchBtn = new Button("👀 Watch");
             watchBtn.setStyle("-fx-background-color: #1976D2; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 8;");
             watchBtn.setOnAction(e -> {
-                Controller.Navigation.goToLiveAuction(auctionId, Event.AdminSession.getAdminId(), "ADMIN_DASHBOARD");
+                Controller.Navigation.goToLiveAuction(auctionId, Event.AdminSession.getAdminId(),"ADMIN","ADMIN_DASHBOARD");
             });
 
             rightSide.getChildren().addAll(statusBadge, stopBtn, watchBtn);

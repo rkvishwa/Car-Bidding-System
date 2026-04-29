@@ -15,11 +15,11 @@ public class CarDAO {
             (car_id, seller_id, title, brand, model, year, price_start, description, image, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')
         """;
-
+        String carId = generateCarId();
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, generateCarId());
+            ps.setString(1, carId);
             ps.setString(2, sellerId);
             ps.setString(3, title);
             ps.setString(4, brand);
