@@ -131,7 +131,7 @@ public class AdminUserPanel {
         VBox info = new VBox(2);
         HBox.setHgrow(info, Priority.ALWAYS);
         Label n = new Label(name); n.setStyle("-fx-font-weight: bold;");
-        Label r = new Label(role + " | ID: " + userId); r.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
+        Label r = new Label(role); r.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
         info.getChildren().addAll(n, r);
 
         Button approveBtn = new Button("✅ Approve");
@@ -199,9 +199,6 @@ public class AdminUserPanel {
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 15));
         nameLabel.setTextFill(Color.web("#111827"));
 
-        Label idLabel = new Label("ID: " + userId);
-        idLabel.setStyle("-fx-text-fill: #aaa; -fx-font-size: 11px;");
-
         // Role badge
         Label roleBadge = new Label(role);
         roleBadge.setPadding(new Insets(3, 10, 3, 10));
@@ -243,7 +240,7 @@ public class AdminUserPanel {
             card.setOpacity(0.5);
         }
 
-        info.getChildren().addAll(nameLabel, idLabel, badges);
+        info.getChildren().addAll(nameLabel, badges);
 
         // ===== ACTIONS =====
         HBox actions = new HBox(8);

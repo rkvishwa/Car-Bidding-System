@@ -189,7 +189,7 @@ public class AdminAuctionPanel {
         Label details = new Label(brand + " • " + model);
         details.setStyle("-fx-text-fill: #888; -fx-font-size: 12px;");
 
-        Label bidInfo = new Label("💰 Min Bid: " + minBid + " MMK");
+        Label bidInfo = new Label("💰 Min Bid: " + formatPrice(minBid) + " MMK");
         bidInfo.setStyle("-fx-text-fill: #1976D2; -fx-font-weight: bold;");
 
         info.getChildren().addAll(name, details, bidInfo);
@@ -231,6 +231,15 @@ public class AdminAuctionPanel {
 
         card.getChildren().addAll(imgBox, info, rightSide);
         return card;
+    }
+
+    private String formatPrice(String priceStr) {
+        try {
+            double price = Double.parseDouble(priceStr);
+            return String.format("%,.0f", price);
+        } catch (Exception e) {
+            return priceStr;
+        }
     }
 
     public void onClose(Consumer<String> action) {

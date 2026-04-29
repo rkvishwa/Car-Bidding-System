@@ -51,26 +51,34 @@ public class LiveAuctionController {
         countdownTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             try {
                 String endTimeStr = AuctionService.getAuctionEndTime(auctionId);
-                if (endTimeStr.equals("NONE")) {
+                
+                if (endTimeStr == null || endTimeStr.equals("NONE") || endTimeStr.equals("PENDING")) {
                     view.timerLabel.setText("PENDING");
+                    view.bidBtn.setDisable(true);
                     return;
                 }
                 
-                // Format: 2026-04-24 20:40:43.0
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                LocalDateTime endTime = LocalDateTime.parse(endTimeStr, formatter);
-                LocalDateTime now = LocalDateTime.now();
+                String[] parts = endTimeStr.split("\\|");
+                if (parts.length < 2) return;
                 
-                long diff = ChronoUnit.SECONDS.between(now, endTime);
+                String type = parts[0];
+                long diff = Long.parseLong(parts[1]);
                 
                 if (diff <= 0) {
                     view.timerLabel.setText("CLOSED");
+                    view.bidBtn.setDisable(true);
                     countdownTimeline.stop();
                     handleAuctionEnd();
                 } else {
                     long mins = diff / 60;
                     long secs = diff % 60;
-                    view.timerLabel.setText(String.format("%02d:%02d", mins, secs));
+                    if (type.equals("STARTS_IN")) {
+                        view.timerLabel.setText(String.format("Starts in: %02d:%02d", mins, secs));
+                        view.bidBtn.setDisable(true); // Disable bidding before start
+                    } else {
+                        view.timerLabel.setText(String.format("%02d:%02d", mins, secs));
+                        view.bidBtn.setDisable(false); // Enable bidding
+                    }
                 }
             } catch (Exception ex) { 
                 view.timerLabel.setText("00:00");

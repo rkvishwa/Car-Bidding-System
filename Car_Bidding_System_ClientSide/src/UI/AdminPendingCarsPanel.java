@@ -15,6 +15,8 @@ import java.util.function.Consumer;
 public class AdminPendingCarsPanel {
 
     private FlowPane pendingGrid = new FlowPane();
+    private FlowPane approvedGrid = new FlowPane();
+    private FlowPane rejectedGrid = new FlowPane();
     private FlowPane deletedGrid = new FlowPane();
     private Consumer<String> onApprove;
     private Consumer<String> onReject;
@@ -61,11 +63,31 @@ public class AdminPendingCarsPanel {
         pendingGrid.setHgap(18);
         pendingGrid.setVgap(18);
         pendingGrid.setPadding(new Insets(8, 0, 0, 0));
+        
+        // ===== APPROVED SECTION =====
+        Label approvedTitle = new Label("✅ Approved Cars");
+        approvedTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
+        approvedTitle.setTextFill(Color.web("#2E7D32"));
+        approvedTitle.setPadding(new Insets(10, 0, 0, 0));
+
+        approvedGrid.setHgap(18);
+        approvedGrid.setVgap(18);
+        approvedGrid.setPadding(new Insets(8, 0, 0, 0));
+        
+        // ===== REJECTED SECTION =====
+        Label rejectedTitle = new Label("❌ Rejected Cars");
+        rejectedTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
+        rejectedTitle.setTextFill(Color.web("#C62828"));
+        rejectedTitle.setPadding(new Insets(10, 0, 0, 0));
+
+        rejectedGrid.setHgap(18);
+        rejectedGrid.setVgap(18);
+        rejectedGrid.setPadding(new Insets(8, 0, 0, 0));
 
         // ===== DELETED BY SELLER SECTION =====
-        Label deletedTitle = new Label("🗑️ Deleted by Seller");
+        Label deletedTitle = new Label("🗑️ Cancelled by Seller");
         deletedTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
-        deletedTitle.setTextFill(Color.web("#D32F2F"));
+        deletedTitle.setTextFill(Color.web("#757575"));
         deletedTitle.setPadding(new Insets(10, 0, 0, 0));
 
         deletedGrid.setHgap(18);
@@ -73,7 +95,12 @@ public class AdminPendingCarsPanel {
         deletedGrid.setPadding(new Insets(8, 0, 0, 0));
 
         VBox content = new VBox(15);
-        content.getChildren().addAll(pendingTitle, pendingGrid, new Separator(), deletedTitle, deletedGrid);
+        content.getChildren().addAll(
+            pendingTitle, pendingGrid, new Separator(),
+            approvedTitle, approvedGrid, new Separator(),
+            rejectedTitle, rejectedGrid, new Separator(),
+            deletedTitle, deletedGrid
+        );
 
         ScrollPane scroll = new ScrollPane(content);
         scroll.setFitToWidth(true);
@@ -149,6 +176,8 @@ public class AdminPendingCarsPanel {
 
     public void renderWithStatus(String res) {
         pendingGrid.getChildren().clear();
+        approvedGrid.getChildren().clear();
+        rejectedGrid.getChildren().clear();
         deletedGrid.getChildren().clear();
 
         if (res == null || res.trim().isEmpty()) {
@@ -173,10 +202,14 @@ public class AdminPendingCarsPanel {
             String status = d.length > 10 ? d[10] : "PENDING";
 
             if ("DELETED_BY_SELLER".equals(status)) {
-                deletedGrid.getChildren().add(createCard(d, true));
+                deletedGrid.getChildren().add(createCard(d, status));
                 deletedCount++;
+            } else if ("APPROVED".equals(status)) {
+                approvedGrid.getChildren().add(createCard(d, status));
+            } else if ("REJECTED".equals(status)) {
+                rejectedGrid.getChildren().add(createCard(d, status));
             } else {
-                pendingGrid.getChildren().add(createCard(d, false));
+                pendingGrid.getChildren().add(createCard(d, status));
                 pendingCount++;
             }
         }
@@ -187,23 +220,30 @@ public class AdminPendingCarsPanel {
             pendingGrid.getChildren().add(empty);
         }
         if (deletedCount == 0) {
-            Label empty = new Label("No seller-deleted cars");
+            Label empty = new Label("No cancelled cars");
             empty.setStyle("-fx-text-fill: #999; -fx-font-size: 13px; -fx-padding: 15;");
             deletedGrid.getChildren().add(empty);
         }
 
-        countLabel.setText(pendingCount + " pending, " + deletedCount + " deleted");
+        countLabel.setText(pendingCount + " pending, " + deletedCount + " cancelled");
     }
 
-    private VBox createCard(String[] d, boolean isDeleted) {
+    private VBox createCard(String[] d, String status) {
 
         VBox card = new VBox(0);
         card.setPrefWidth(300);
         card.setMaxWidth(300);
+        
+        boolean isDeleted = "DELETED_BY_SELLER".equals(status);
+        String borderColor = "#FFF3E0";
+        if (isDeleted) borderColor = "#E0E0E0";
+        else if ("APPROVED".equals(status)) borderColor = "#C8E6C9";
+        else if ("REJECTED".equals(status)) borderColor = "#FFCDD2";
+        
         card.setStyle(
             "-fx-background-color: white;" +
             "-fx-background-radius: 16;" +
-            "-fx-border-color: " + (isDeleted ? "#FFCDD2" : "#FFF3E0") + "; -fx-border-radius: 16; -fx-border-width: 2;"
+            "-fx-border-color: " + borderColor + "; -fx-border-radius: 16; -fx-border-width: 2;"
         );
 
         if (isDeleted) {
@@ -237,7 +277,21 @@ public class AdminPendingCarsPanel {
         // Badge
         Label badge;
         if (isDeleted) {
-            badge = new Label("🗑️ DELETED BY SELLER");
+            badge = new Label("🗑️ CANCELLED");
+            badge.setStyle(
+                "-fx-background-color: #F5F5F5; -fx-text-fill: #757575;" +
+                "-fx-background-radius: 12; -fx-font-size: 10px; -fx-font-weight: bold;" +
+                "-fx-padding: 4 10;"
+            );
+        } else if ("APPROVED".equals(status)) {
+            badge = new Label("✅ APPROVED");
+            badge.setStyle(
+                "-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32;" +
+                "-fx-background-radius: 12; -fx-font-size: 10px; -fx-font-weight: bold;" +
+                "-fx-padding: 4 10;"
+            );
+        } else if ("REJECTED".equals(status)) {
+            badge = new Label("❌ REJECTED");
             badge.setStyle(
                 "-fx-background-color: #FFEBEE; -fx-text-fill: #C62828;" +
                 "-fx-background-radius: 12; -fx-font-size: 10px; -fx-font-weight: bold;" +
@@ -267,14 +321,7 @@ public class AdminPendingCarsPanel {
         Label info = new Label(d[3] + " • " + d[4] + " • " + d[5]);
         info.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
-        String displayPrice = d[6];
-        try {
-            double p = Double.parseDouble(d[6]);
-            if (p >= 1000 && p % 1000 == 0) displayPrice = String.format("%.0fk", p / 1000);
-            else if (p >= 1000 && p % 100 == 0) displayPrice = String.format("%.1fk", p / 1000);
-        } catch (Exception e) {}
-        
-        Label priceLabel = new Label("💰 " + displayPrice + " MMK");
+        Label priceLabel = new Label("💰 " + formatPrice(d[6]) + " MMK");
         priceLabel.setStyle("-fx-text-fill: #1976D2; -fx-font-weight: bold; -fx-font-size: 14px;");
 
         Label sellerLabel = new Label("👤 Seller: " + d[1]);
@@ -297,7 +344,7 @@ public class AdminPendingCarsPanel {
         actions.setPadding(new Insets(8, 0, 0, 0));
 
         if (isDeleted) {
-            // Only show permanent delete button for deleted-by-seller cars
+            // Only show permanent delete button for cancelled cars
             Button permDeleteBtn = new Button("🗑️ Permanently Delete");
             permDeleteBtn.setStyle(
                 "-fx-background-color: #B71C1C;" +
@@ -314,7 +361,7 @@ public class AdminPendingCarsPanel {
                 }
             });
             actions.getChildren().add(permDeleteBtn);
-        } else {
+        } else if ("PENDING".equals(status)) {
             // Normal approve/reject buttons for pending cars
             Button approveBtn = new Button("✅ Approve");
             approveBtn.setStyle(
@@ -355,6 +402,15 @@ public class AdminPendingCarsPanel {
         card.getChildren().addAll(imgStack, details);
 
         return card;
+    }
+
+    private String formatPrice(String priceStr) {
+        try {
+            double price = Double.parseDouble(priceStr);
+            return String.format("%,.0f", price);
+        } catch (Exception e) {
+            return priceStr;
+        }
     }
 
     public void onApprove(Consumer<String> action) {

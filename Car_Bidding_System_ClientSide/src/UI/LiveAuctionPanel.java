@@ -54,9 +54,7 @@ public class LiveAuctionPanel {
         VBox titleBox = new VBox(2);
         Label title = new Label("🔴 Live Auction");
         title.setFont(Font.font("System", FontWeight.BOLD, 22));
-        Label sub = new Label("ID: " + auctionId);
-        sub.setStyle("-fx-text-fill: #888; -fx-font-size: 11px;");
-        titleBox.getChildren().addAll(title, sub);
+        titleBox.getChildren().addAll(title);
         
         Region s1 = new Region(); HBox.setHgrow(s1, Priority.ALWAYS);
         
@@ -173,10 +171,14 @@ public class LiveAuctionPanel {
 
     public void renderAuction(String data) {
         String[] d = data.split("\\|");
-        if (d.length < 5) return;
-        carTitle.setText(d[1]);
-        carBrandModel.setText(d[2] + " " + d[3]);
-        currentBidLabel.setText(d[4]);
+        if (d.length < 10) return;
+        
+        // d[0]=auctionId, d[1]=carId, d[2]=title, d[3]=brand, d[4]=model,
+        // d[5]=currentBid, d[6]=image, d[7]=status, d[8]=year, d[9]=priceStart
+        
+        carTitle.setText(d[2]);
+        carBrandModel.setText(d[3] + " " + d[4] + " (" + d[8] + ") • Original Price: " + formatPrice(d[9]) + " MMK");
+        currentBidLabel.setText(formatPrice(d[5]));
         try {
             if (d[6] != null && !d[6].equals("null")) {
                 carImage.setImage(new Image(d[6], 500, 300, false, true, true));
@@ -191,10 +193,21 @@ public class LiveAuctionPanel {
             String[] d = row.split("\\|");
             if (d.length < 3) continue;
             HBox bidRow = new HBox(10);
-            Label b = new Label("👤 " + d[1] + " bid " + d[2] + " MMK");
+            
+            // d[0]=buyer_id, d[1]=bid_amount, d[2]=bid_time
+            Label b = new Label("👤 " + d[0] + " bid " + formatPrice(d[1]) + " MMK (" + d[2].substring(0, Math.min(d[2].length(), 16)) + ")");
             b.setStyle("-fx-font-size: 12px;");
             bidRow.getChildren().add(b);
             bidHistory.getChildren().add(bidRow);
+        }
+    }
+    
+    private String formatPrice(String priceStr) {
+        try {
+            double price = Double.parseDouble(priceStr);
+            return String.format("%,.0f", price);
+        } catch (Exception e) {
+            return priceStr;
         }
     }
     
@@ -209,7 +222,7 @@ public class LiveAuctionPanel {
     }
 
     public void showWinner(String winnerName, double amount) {
-        winnerOverlay.setText("🏆 WINNER 🏆\n\n" + winnerName + "\n\nWon at " + amount + " MMK");
+        winnerOverlay.setText("🏆 WINNER 🏆\n\n" + winnerName + "\n\nWon at " + formatPrice(String.valueOf(amount)) + " MMK");
         winnerOverlay.setVisible(true);
         bidControls.setDisable(true);
     }

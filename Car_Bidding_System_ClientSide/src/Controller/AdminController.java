@@ -66,7 +66,8 @@ public class AdminController {
 
 	    view.onApprove(data -> {
 	        try {
-	            AuctionService.approveAuction(data[0], data[1], data[2], AdminSession.getAdminId());
+	            String startTime = (data.length > 3) ? data[3] : "";
+	            AuctionService.approveAuction(data[0], data[1], data[2], startTime, AdminSession.getAdminId());
 	            refreshAuctions(view);
 	        } catch (Exception e) { e.printStackTrace(); }
 	    });

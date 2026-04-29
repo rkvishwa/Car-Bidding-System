@@ -169,16 +169,9 @@ public class CreateAuctionPanel {
 
         // Additional info if available
         if (d.length > 5) {
-            String displayPrice = d.length > 6 ? d[6] : "";
-            try {
-                double p = Double.parseDouble(displayPrice);
-                if (p >= 1000 && p % 1000 == 0) displayPrice = String.format("%.0fk", p / 1000);
-                else if (p >= 1000 && p % 100 == 0) displayPrice = String.format("%.1fk", p / 1000);
-            } catch (Exception e) {}
-            
             Label yearPrice = new Label(
                 (d.length > 5 ? "Year: " + d[5] : "") +
-                (d.length > 6 ? "  |  Price: " + displayPrice + " MMK" : "")
+                (d.length > 6 ? "  |  Price: " + formatPrice(d[6]) + " MMK" : "")
             );
             yearPrice.setStyle("-fx-text-fill: #666; -fx-font-size: 11px;");
             details.getChildren().add(yearPrice);
@@ -241,6 +234,15 @@ public class CreateAuctionPanel {
         card.getChildren().addAll(imgStack, details);
 
         return card;
+    }
+
+    private String formatPrice(String priceStr) {
+        try {
+            double price = Double.parseDouble(priceStr);
+            return String.format("%,.0f", price);
+        } catch (Exception e) {
+            return priceStr;
+        }
     }
 
     public void onCreateAuction(BiConsumer<String, String> action) {

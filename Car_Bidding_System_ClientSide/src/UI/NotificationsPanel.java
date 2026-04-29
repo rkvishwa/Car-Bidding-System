@@ -186,7 +186,7 @@ public class NotificationsPanel {
         Label msgLabel = new Label(message);
         msgLabel.setWrapText(true);
         msgLabel.setFont(Font.font("System", isUnread ? FontWeight.BOLD : FontWeight.NORMAL, 13));
-        msgLabel.setTextFill(Color.web("#333"));
+        msgLabel.setStyle("-fx-text-fill: black;");
 
         Label dateLabel = new Label("📅 " + createdAt);
         dateLabel.setStyle("-fx-text-fill: #aaa; -fx-font-size: 11px;");

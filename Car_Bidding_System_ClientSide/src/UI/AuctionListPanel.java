@@ -233,7 +233,7 @@ public class AuctionListPanel {
         details.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
         // Bid amount
-        Label bidLbl = new Label("💰 " + bid + " MMK");
+        Label bidLbl = new Label("💰 " + formatPrice(bid) + " MMK");
         bidLbl.setFont(Font.font("System", FontWeight.BOLD, 15));
         bidLbl.setTextFill(Color.web("#1976D2"));
         bidLbl.setId("bid_" + id);
@@ -324,5 +324,14 @@ public class AuctionListPanel {
         card.getChildren().addAll(imageStack, info);
 
         return card;
+    }
+
+    private String formatPrice(String priceStr) {
+        try {
+            double price = Double.parseDouble(priceStr);
+            return String.format("%,.0f", price);
+        } catch (Exception e) {
+            return priceStr;
+        }
     }
 }

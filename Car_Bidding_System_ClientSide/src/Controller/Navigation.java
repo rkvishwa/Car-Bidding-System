@@ -80,10 +80,12 @@ public class Navigation {
                 controller.cleanup();
 
                 if ("MY_AUCTIONS".equals(returnTo)) {
+                    dashboardController.setCurrentPage("MY_AUCTIONS");
                     UI.MyAuctionPanel panel = new UI.MyAuctionPanel();
                     new MyAuctionController(panel, userId,role);
                     dashboard.contentArea.getChildren().setAll(panel.getView());
                 } else {
+                    dashboardController.setCurrentPage("AUCTIONS");
                     // Reload auctions
                     UI.AuctionListPanel panel = new UI.AuctionListPanel(userId);
                     new AuctionController(panel, userId);
@@ -91,6 +93,7 @@ public class Navigation {
                 }
             });
 
+            dashboardController.setCurrentPage("LIVE_AUCTION");
             dashboard.contentArea.getChildren().setAll(view.getView());
 
         } else {

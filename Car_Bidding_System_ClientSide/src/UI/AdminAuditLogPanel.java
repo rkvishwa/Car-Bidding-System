@@ -86,6 +86,11 @@ public class AdminAuditLogPanel {
             filterLogs(query);
         });
 
+        // Filter in real-time as user types
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterLogs(newValue.trim().toLowerCase());
+        });
+
         filterBar.getChildren().addAll(filterLabel, filterField, filterBtn, clearBtn);
 
         // ===== TABLE HEADER =====

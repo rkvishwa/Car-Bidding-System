@@ -44,8 +44,8 @@ public class AuctionService {
         return ClientManager.send("GET_PENDING_AUCTIONS");
     }
 
-    public static String approveAuction(String id, String minBid, String duration, String adminId) throws Exception {
-        return ClientManager.send("APPROVE_AUCTION:" + id + ":" + minBid + ":" + duration + ":" + adminId);
+    public static String approveAuction(String id, String minBid, String duration, String startTime, String adminId) throws Exception {
+        return ClientManager.send("APPROVE_AUCTION:" + id + ":" + minBid + ":" + duration + ":" + startTime + ":" + adminId);
     }
 
     public static String confirmWinner(String id, String adminId) throws Exception {

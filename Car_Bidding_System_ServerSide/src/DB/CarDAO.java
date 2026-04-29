@@ -80,7 +80,7 @@ public class CarDAO {
             SELECT car_id, seller_id, title, brand, model, year, 
                    price_start, description, image, status, created_at
             FROM car 
-            WHERE status IN ('PENDING', 'DELETED_BY_SELLER')
+            WHERE status IN ('PENDING', 'DELETED_BY_SELLER', 'APPROVED', 'REJECTED')
             ORDER BY created_at DESC
         """;
 

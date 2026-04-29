@@ -169,7 +169,7 @@ public class AuctionDAO {
     public String getAuctionById(String auctionId) {
     	String sql = """
     		 SELECT a.auction_id, a.car_id, a.status, a.winner_id, a.current_bid,
-			       c.title, c.brand, c.model, c.image
+			       c.title, c.brand, c.model, c.image, c.year, c.price_start
 			FROM auctions a
 			JOIN car c ON a.car_id = c.car_id
 			WHERE a.auction_id=?
@@ -189,7 +189,9 @@ public class AuctionDAO {
             		       rs.getString("model") + "|" +
             		       rs.getDouble("current_bid") + "|" +
             		       rs.getString("image") + "|" +
-            		       rs.getString("status");
+            		       rs.getString("status") + "|" +
+            		       rs.getInt("year") + "|" +
+            		       rs.getDouble("price_start");
             }
 
         } catch (Exception e) {
@@ -295,16 +297,19 @@ public class AuctionDAO {
 //        return false;
 //    }
     
-    public boolean approveAuction(String auctionId, double adminMinBid, int duration) {
+    public boolean approveAuction(String auctionId, double adminMinBid, int duration, String startTimeStr) {
 
         String getMinSql = "SELECT min_bid FROM auctions WHERE auction_id=?";
+        
+        boolean hasStartTime = (startTimeStr != null && !startTimeStr.trim().isEmpty());
+        String timeExpr = hasStartTime ? "?" : "NOW()";
         
         String updateSql = """
             UPDATE auctions 
             SET min_bid=?, current_bid=?, status='ACTIVE',
-                start_time=NOW(),
+                start_time=""" + timeExpr + """,
                 duration_minutes=?, 
-                end_time=DATE_ADD(NOW(), INTERVAL ? MINUTE)
+                end_time=DATE_ADD(""" + timeExpr + """, INTERVAL ? MINUTE)
             WHERE auction_id=?
         """;
 
@@ -330,11 +335,18 @@ public class AuctionDAO {
             double finalMinBid = Math.max(adminMinBid, sellerMinBid);
 
             try (PreparedStatement ps = con.prepareStatement(updateSql)) {
-                ps.setDouble(1, finalMinBid);
-                ps.setDouble(2, finalMinBid);
-                ps.setInt(3, duration);
-                ps.setInt(4, duration);
-                ps.setString(5, auctionId);
+                int paramIdx = 1;
+                ps.setDouble(paramIdx++, finalMinBid);
+                ps.setDouble(paramIdx++, finalMinBid);
+                if (hasStartTime) {
+                    ps.setString(paramIdx++, startTimeStr);
+                }
+                ps.setInt(paramIdx++, duration);
+                if (hasStartTime) {
+                    ps.setString(paramIdx++, startTimeStr);
+                }
+                ps.setInt(paramIdx++, duration);
+                ps.setString(paramIdx++, auctionId);
 
                 return ps.executeUpdate() > 0;
             }
@@ -379,14 +391,29 @@ public class AuctionDAO {
     }
 
     public String getAuctionEndTime(String auctionId) {
-        String sql = "SELECT end_time FROM auctions WHERE auction_id=?";
+        String sql = """
+            SELECT 
+                TIMESTAMPDIFF(SECOND, NOW(), start_time) as starts_in,
+                TIMESTAMPDIFF(SECOND, NOW(), end_time) as ends_in,
+                status
+            FROM auctions WHERE auction_id=?
+        """;
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, auctionId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Timestamp ts = rs.getTimestamp("end_time");
-                return ts != null ? ts.toString() : "NONE";
+                String status = rs.getString("status");
+                if ("PENDING".equals(status)) return "PENDING";
+                
+                long startsIn = rs.getLong("starts_in");
+                long endsIn = rs.getLong("ends_in");
+                
+                if (startsIn > 0) {
+                    return "STARTS_IN|" + startsIn;
+                } else {
+                    return "ENDS_IN|" + endsIn;
+                }
             }
         } catch (Exception e) { e.printStackTrace(); }
         return "NONE";

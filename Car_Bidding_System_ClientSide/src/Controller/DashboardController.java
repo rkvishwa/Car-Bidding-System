@@ -281,6 +281,10 @@ public class DashboardController {
             Navigation.goToLogin();
         });
     }
+    
+    public void setCurrentPage(String page) {
+        this.currentPage = page;
+    }
 
     // =========================
     // REFRESH METHODS

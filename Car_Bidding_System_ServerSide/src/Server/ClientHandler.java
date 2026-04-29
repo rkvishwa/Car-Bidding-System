@@ -154,9 +154,18 @@ public class ClientHandler extends Thread {
 
                         case "APPROVE_AUCTION": {
                             AuctionDAO dao = new AuctionDAO();
-                            boolean ok = dao.approveAuction(parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]));
+                            String startTime = parts[4];
+                            String adminId = parts.length > 5 ? parts[5] : parts[4]; 
+                            if (parts.length > 5) {
+                                adminId = parts[5];
+                            } else {
+                                // fallback if startTime is missing
+                                startTime = "";
+                                adminId = parts[4];
+                            }
+                            boolean ok = dao.approveAuction(parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), startTime);
                             if (ok) {
-                                new AuditDAO().logAction(parts[4], "APPROVE_AUCTION", parts[1]);
+                                new AuditDAO().logAction(adminId, "APPROVE_AUCTION", parts[1]);
                                 broadcast("AUCTION_APPROVED:" + parts[1]);
                             }
                             response = ok ? "SUCCESS" : "FAILED";

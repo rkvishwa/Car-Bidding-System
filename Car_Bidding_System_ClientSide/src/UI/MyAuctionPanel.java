@@ -188,7 +188,7 @@ public class MyAuctionPanel {
         Label details = new Label(brand + " • " + model);
         details.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
 
-        Label bidInfo = new Label("💰 Current: " + currentBid + " MMK  |  Min: " + minBid + " MMK");
+        Label bidInfo = new Label("💰 Current: " + formatPrice(currentBid) + " MMK  |  Min: " + formatPrice(minBid) + " MMK");
         bidInfo.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: bold; -fx-font-size: 13px;");
 
         info.getChildren().addAll(name, details, bidInfo);
@@ -204,7 +204,7 @@ public class MyAuctionPanel {
                 );
 
                 Label winnerIcon = new Label("🏆");
-                Label winnerLabel = new Label("Winner: " + winnerId + " — Won at " + currentBid + " MMK");
+                Label winnerLabel = new Label("Winner: " + winnerId + " — Won at " + formatPrice(currentBid) + " MMK");
                 winnerLabel.setStyle(
                     "-fx-text-fill: #2E7D32; -fx-font-weight: bold; -fx-font-size: 12px;"
                 );
@@ -286,5 +286,14 @@ public class MyAuctionPanel {
         card.getChildren().addAll(imgBox, info, rightSide);
 
         return card;
+    }
+
+    private String formatPrice(String priceStr) {
+        try {
+            double price = Double.parseDouble(priceStr);
+            return String.format("%,.0f", price);
+        } catch (Exception e) {
+            return priceStr;
+        }
     }
 }
