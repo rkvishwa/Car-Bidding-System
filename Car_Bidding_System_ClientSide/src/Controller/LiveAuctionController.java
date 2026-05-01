@@ -68,6 +68,9 @@ public class LiveAuctionController {
                     view.timerLabel.setText("CLOSED");
                     view.bidBtn.setDisable(true);
                     countdownTimeline.stop();
+                    try {
+                        AuctionService.stopAuction(auctionId, userId);
+                    } catch (Exception ex) { ex.printStackTrace(); }
                     handleAuctionEnd();
                 } else {
                     long mins = diff / 60;
@@ -146,13 +149,13 @@ public class LiveAuctionController {
         try {
             String res = AuctionService.getAuction(auctionId);
             String[] d = res.split("\\|");
-            if (d.length < 8) {
+            if (d.length < 11) {
                 System.out.println("Invalid auction response: " + res);
                 return;
-            }//////////////////////////////////////////////////////////
+            }
             
-            String winnerId = d[7];/////////////////////////////////////
-            double amount;///////////////////////
+            String winnerId = d[10];
+            double amount;
 //            if (d.length >= 8) {
 //            	
 ////                String winnerId = d[7];

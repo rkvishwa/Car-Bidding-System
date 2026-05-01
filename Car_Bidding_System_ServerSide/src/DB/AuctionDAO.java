@@ -4,6 +4,16 @@ import java.sql.*;
 
 public class AuctionDAO {
 
+	private String fixUrl(String url) {
+	    if (url == null) return null;
+	    url = url.trim();
+	    url = url.replace("https //", "https://");
+	    url = url.replace("http //", "http://");
+	    url = url.replace("https:/", "https://");
+	    url = url.replace("http:/", "http://");
+	    return url;
+	}
+
 	public void closeAuction(String auctionId) {
 
 	    String getWinnerSQL = """
@@ -48,7 +58,7 @@ public class AuctionDAO {
 	                // Notify winner
 	                new NotificationDAO().sendNotification(
 	                    winnerId,
-	                    "Congratulations! You won the auction " + auctionId + " with bid " + winAmount,
+	                    "Congratulations! You won the auction " + auctionId + " with bid " + String.format("%,.0f", winAmount) + " MMK",
 	                    "WIN"
 	                );
 
@@ -73,6 +83,19 @@ public class AuctionDAO {
 	        	
 	            e.printStackTrace();
 	        }
+	}
+
+	public void autoCloseExpiredAuctions() {
+	    String sql = "SELECT auction_id FROM auctions WHERE status='ACTIVE' AND end_time <= NOW()";
+	    try (Connection con = DBConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+	        while (rs.next()) {
+	            closeAuction(rs.getString("auction_id"));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	private void notifyLosers(Connection con, String auctionId, String winnerId) {
@@ -115,7 +138,7 @@ public class AuctionDAO {
 	        if (rs.next()) {
 	            new NotificationDAO().sendNotification(
 	                rs.getString("seller_id"),
-	                "Your car '" + rs.getString("title") + "' sold for " + winAmount + "!",
+	                "Your car '" + rs.getString("title") + "' sold for " + String.format("%,.0f", winAmount) + " MMK!",
 	                "SOLD"
 	            );
 	        }
@@ -155,7 +178,7 @@ public class AuctionDAO {
             		    rs.getString("model") + "|" +
             		    rs.getDouble("current_bid") + "|" +
             		    rs.getString("status") + "|" +
-            		    rs.getString("image") + "\n"
+            		    fixUrl(rs.getString("image")) + "\n"
             		);
             }
 
@@ -188,10 +211,11 @@ public class AuctionDAO {
             		       rs.getString("brand") + "|" +
             		       rs.getString("model") + "|" +
             		       rs.getDouble("current_bid") + "|" +
-            		       rs.getString("image") + "|" +
+            		       fixUrl(rs.getString("image")) + "|" +
             		       rs.getString("status") + "|" +
             		       rs.getInt("year") + "|" +
-            		       rs.getDouble("price_start");
+            		       rs.getDouble("price_start") + "|" +
+            		       (rs.getString("winner_id") != null ? rs.getString("winner_id") : "N/A");
             }
 
         } catch (Exception e) {
@@ -395,7 +419,7 @@ public class AuctionDAO {
                   .append(rs.getString("title")).append("|")
                   .append(rs.getString("brand")).append("|")
                   .append(rs.getString("model")).append("|")
-                  .append(rs.getString("image")).append("|")
+                  .append(fixUrl(rs.getString("image"))).append("|")
                   .append(rs.getString("seller_id")).append("\n");
             }
         } catch (Exception e) { e.printStackTrace(); }
@@ -465,7 +489,7 @@ public class AuctionDAO {
 	        		    rs.getString("title") + "|" +
 	        		    rs.getString("brand") + "|" +
 	        		    rs.getString("model") + "|" +
-	        		    rs.getString("image") + "|" +
+	        		    fixUrl(rs.getString("image")) + "|" +
 	        		    rs.getDouble("current_bid") + "|" +
 	        		    rs.getDouble("min_bid") + "|" +
 	        		    rs.getString("status") + "|" +
@@ -515,7 +539,7 @@ public class AuctionDAO {
 	                rs.getString("title") + "|" +
 	                rs.getString("brand") + "|" +
 	                rs.getString("model") + "|" +
-	                rs.getString("image") + "|" +
+	                fixUrl(rs.getString("image")) + "|" +
 	                rs.getDouble("current_bid") + "|" +
 	                rs.getDouble("min_bid") + "|" +
 	                rs.getString("status") + "|" +

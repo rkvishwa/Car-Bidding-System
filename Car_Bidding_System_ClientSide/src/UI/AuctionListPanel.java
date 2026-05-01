@@ -176,6 +176,7 @@ public class AuctionListPanel {
         img.setPreserveRatio(false);
 
         try {
+            imagePath = cleanImageUrl(imagePath);
             if (imagePath != null && !imagePath.isEmpty() && !imagePath.equals("null")) {
                 img.setImage(new Image(imagePath, 280, 160, false, true, true));
             }
@@ -332,6 +333,31 @@ public class AuctionListPanel {
             return String.format("%,.0f", price);
         } catch (Exception e) {
             return priceStr;
+        }
+    private String cleanImageUrl(String url) {
+        try {
+            if (url == null) return null;
+
+            if (url.contains("google.com/url")) {
+                String decoded = java.net.URLDecoder.decode(url, "UTF-8");
+
+                String[] parts = decoded.split("url=");
+                if (parts.length < 2) return null;
+
+                String real = parts[1];
+
+                int end = real.indexOf("&");
+                if (end != -1) {
+                    real = real.substring(0, end);
+                }
+
+                return real;
+            }
+
+            return url;
+
+        } catch (Exception e) {
+            return url;
         }
     }
 }

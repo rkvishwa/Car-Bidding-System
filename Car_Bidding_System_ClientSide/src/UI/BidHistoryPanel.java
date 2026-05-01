@@ -203,11 +203,11 @@ public class BidHistoryPanel {
         VBox rightSide = new VBox(5);
         rightSide.setAlignment(Pos.CENTER_RIGHT);
 
-        Label bidLbl = new Label("Your Bid: " + bidAmount + " MMK");
+        Label bidLbl = new Label("Your Bid: " + formatPrice(bidAmount) + " MMK");
         bidLbl.setFont(Font.font("System", FontWeight.BOLD, 14));
         bidLbl.setTextFill(Color.web("#2563EB"));
 
-        Label currentLbl = new Label("Final: " + currentBid + " MMK");
+        Label currentLbl = new Label("Final: " + formatPrice(currentBid) + " MMK");
         currentLbl.setStyle("-fx-text-fill: #888; -fx-font-size: 11px;");
 
         Label resultBadge = new Label(result);
@@ -243,5 +243,14 @@ public class BidHistoryPanel {
         card.getChildren().addAll(iconCircle, imgBox, info, rightSide);
 
         return card;
+    }
+
+    private String formatPrice(String priceStr) {
+        try {
+            double price = Double.parseDouble(priceStr);
+            return String.format("%,.0f", price);
+        } catch (Exception e) {
+            return priceStr;
+        }
     }
 }

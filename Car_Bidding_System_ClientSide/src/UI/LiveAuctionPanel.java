@@ -174,7 +174,7 @@ public class LiveAuctionPanel {
         if (d.length < 10) return;
         
         // d[0]=auctionId, d[1]=carId, d[2]=title, d[3]=brand, d[4]=model,
-        // d[5]=currentBid, d[6]=image, d[7]=status, d[8]=year, d[9]=priceStart
+        // d[5]=currentBid, d[6]=image, d[7]=status, d[8]=year, d[9]=priceStart, d[10]=winnerId
         
         carTitle.setText(d[2]);
         carBrandModel.setText(d[3] + " " + d[4] + " (" + d[8] + ") • Original Price: " + formatPrice(d[9]) + " MMK");

@@ -231,11 +231,7 @@ public class MyCarsPanel {
             String displayPrice = price;
             try {
                 double p = Double.parseDouble(price);
-                if (p >= 1000 && p % 1000 == 0) {
-                    displayPrice = String.format("%.0fk", p / 1000);
-                } else if (p >= 1000 && p % 100 == 0) {
-                    displayPrice = String.format("%.1fk", p / 1000);
-                } 
+                displayPrice = String.format("%,.0f", p);
             } catch (Exception e) {}
             
             Label priceLabel = new Label("💰 " + displayPrice + " MMK");

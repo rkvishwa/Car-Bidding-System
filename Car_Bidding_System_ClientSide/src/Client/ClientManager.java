@@ -59,7 +59,13 @@ public class ClientManager {
                         msg.startsWith("CAR_REJECTED") ||
                         msg.startsWith("USER_BANNED") ||
                         msg.startsWith("USER_DELETED") ||
-                        msg.startsWith("ROLE_CHANGED")) {
+                        msg.startsWith("ROLE_CHANGED") ||
+                        msg.startsWith("AUCTION_APPROVED") ||
+                        msg.startsWith("WINNER_CONFIRMED") ||
+                        msg.startsWith("AUCTION_PENDING") ||
+                        msg.startsWith("USER_APPROVED") ||
+                        msg.startsWith("CAR_DELETED") ||
+                        msg.startsWith("CAR_DELETED_BY_SELLER")) {
 
                         for (Consumer<String> l : listeners) {
                             l.accept(msg);

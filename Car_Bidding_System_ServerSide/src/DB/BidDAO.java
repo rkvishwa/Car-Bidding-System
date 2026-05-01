@@ -51,7 +51,7 @@ public class BidDAO {
 	        // send notification to bidder
 	        new NotificationDAO().sendNotification(
 	            buyerId,
-	            "You placed a bid of " + amount,
+	            "You placed a bid of " + String.format("%,.0f", amount) + " MMK",
 	            "BID"
 	        );
 
@@ -223,7 +223,7 @@ public class BidDAO {
 
             notifDAO.sendNotification(
                 userId,
-                "New bid of " + amount + " on an auction you're watching!",
+                "New bid of " + String.format("%,.0f", amount) + " MMK on an auction you're watching!",
                 "WATCHLIST_BID"
             );
         }
