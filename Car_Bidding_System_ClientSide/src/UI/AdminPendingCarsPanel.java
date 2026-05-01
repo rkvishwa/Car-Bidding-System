@@ -58,6 +58,7 @@ public class AdminPendingCarsPanel {
         Label pendingTitle = new Label("⏳ Awaiting Review");
         pendingTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
         pendingTitle.setTextFill(Color.web("#E65100"));
+        pendingTitle.setStyle("-fx-text-fill: #E65100; -fx-font-weight: bold;");
         pendingTitle.setPadding(new Insets(5, 0, 0, 0));
 
         pendingGrid.setHgap(18);
@@ -68,6 +69,7 @@ public class AdminPendingCarsPanel {
         Label approvedTitle = new Label("✅ Approved Cars");
         approvedTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
         approvedTitle.setTextFill(Color.web("#2E7D32"));
+        approvedTitle.setStyle("-fx-text-fill: #2E7D32; -fx-font-weight: bold;");
         approvedTitle.setPadding(new Insets(10, 0, 0, 0));
 
         approvedGrid.setHgap(18);
@@ -78,6 +80,7 @@ public class AdminPendingCarsPanel {
         Label rejectedTitle = new Label("❌ Rejected Cars");
         rejectedTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
         rejectedTitle.setTextFill(Color.web("#C62828"));
+        rejectedTitle.setStyle("-fx-text-fill: #C62828; -fx-font-weight: bold;");
         rejectedTitle.setPadding(new Insets(10, 0, 0, 0));
 
         rejectedGrid.setHgap(18);
@@ -88,6 +91,7 @@ public class AdminPendingCarsPanel {
         Label deletedTitle = new Label("🗑️ Cancelled by Seller");
         deletedTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
         deletedTitle.setTextFill(Color.web("#757575"));
+        deletedTitle.setStyle("-fx-text-fill: #757575; -fx-font-weight: bold;");
         deletedTitle.setPadding(new Insets(10, 0, 0, 0));
 
         deletedGrid.setHgap(18);
@@ -167,7 +171,7 @@ public class AdminPendingCarsPanel {
             // But currently, getPendingCars doesn't include status in the output.
             // We'll handle this after updating CarDAO.
 
-            pendingGrid.getChildren().add(createCard(d, false));
+            pendingGrid.getChildren().add(createCard(d, "PENDING"));
             pendingCount++;
         }
         

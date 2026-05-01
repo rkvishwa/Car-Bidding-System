@@ -5,6 +5,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class CarDAO {
+	
+	private String fixUrl(String url) {
+	    if (url == null) return null;
+
+	    url = url.trim();
+
+	    // fix: https // -> https://
+	    url = url.replace("https //", "https://");
+	    url = url.replace("http //", "http://");
+
+	    // fix: https:/ -> https://
+	    url = url.replace("https:/", "https://");
+	    url = url.replace("http:/", "http://");
+
+	    return url;
+	}
 
     public boolean addCar(String sellerId, String title, String brand,
                           String model, int year, double price,
@@ -57,7 +73,7 @@ public class CarDAO {
                     rs.getString("model") + "|" +
                     rs.getInt("year") + "|" +
                     rs.getDouble("price_start") + "|" +
-                    rs.getString("image") + "\n"
+                    fixUrl(rs.getString("image")) + "\n"
                 );
             }
 
@@ -92,7 +108,7 @@ public class CarDAO {
                 String safeDesc = (rs.getString("description") != null ? rs.getString("description") : "No description")
                         .replace("\n", " ")
                         .replace("|", " ");
-                String safeImage = (rs.getString("image") != null ? rs.getString("image") : "")
+                String safeImage = fixUrl(rs.getString("image") != null ? rs.getString("image") : "")
                         .replace("\n", " ")
                         .replace("|", " ");
 
@@ -158,7 +174,7 @@ public class CarDAO {
                     rs.getString("title").replace("\n", " ").replace("|", " ") + "|" +
                     rs.getString("brand").replace("\n", " ").replace("|", " ") + "|" +
                     rs.getString("model").replace("\n", " ").replace("|", " ") + "|" +
-                    (rs.getString("image") != null ? rs.getString("image").replace("\n", " ").replace("|", " ") : "") + "|" +
+                    fixUrl(rs.getString("image") != null ? rs.getString("image").replace("\n", " ").replace("|", " ") : "") + "|" +
                     rs.getInt("year") + "|" +
                     rs.getDouble("price_start")
                 ).append("\n");
@@ -205,7 +221,7 @@ public class CarDAO {
                     rs.getString("title").replace("\n", " ").replace("|", " ") + "|" +
                     rs.getString("brand").replace("\n", " ").replace("|", " ") + "|" +
                     rs.getString("model").replace("\n", " ").replace("|", " ") + "|" +
-                    (rs.getString("image") != null ? rs.getString("image").replace("\n", " ").replace("|", " ") : "") + "|" +
+                    fixUrl(rs.getString("image") != null ? rs.getString("image").replace("\n", " ").replace("|", " ") : "") + "|" +
                     rs.getString("status") + "|" +
                     rs.getString("created_at") + "|" +
                     rs.getInt("year") + "|" +
@@ -268,7 +284,7 @@ public class CarDAO {
                        rs.getInt("year") + "|" +
                        rs.getDouble("price_start") + "|" +
                        rs.getString("description") + "|" +
-                       rs.getString("image") + "|" +
+                       fixUrl(rs.getString("image")) + "|" +
                        rs.getString("status");
             }
 

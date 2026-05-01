@@ -179,11 +179,33 @@ public class LiveAuctionPanel {
         carTitle.setText(d[2]);
         carBrandModel.setText(d[3] + " " + d[4] + " (" + d[8] + ") • Original Price: " + formatPrice(d[9]) + " MMK");
         currentBidLabel.setText(formatPrice(d[5]));
+//        try {
+//            if (d[6] != null && !d[6].equals("null")) {
+//                carImage.setImage(new Image(d[6], 500, 300, false, true, true));
+//            }
+//        } catch (Exception e) {}
         try {
-            if (d[6] != null && !d[6].equals("null")) {
-                carImage.setImage(new Image(d[6], 500, 300, false, true, true));
+            String url = cleanImageUrl(d[6]);
+
+            if (url == null || url.trim().isEmpty() || url.equals("null")) {
+                return;
             }
-        } catch (Exception e) {}
+
+            // FIX COMMON DATA ISSUES
+            url = url.replace("https //", "https://");
+            url = url.replace("http //", "http://");
+            url = url.trim();
+
+            // FINAL VALIDATION (STRICT)
+            if (!url.contains("://")) {
+                url = "file:" + url;
+            }
+
+            carImage.setImage(new Image(url, 500, 300, false, true, true));
+
+        } catch (Exception e) {
+            System.out.println("Image skipped: " + d[6]);
+        }
     }
 
     public void updateBids(String res) {
@@ -208,6 +230,33 @@ public class LiveAuctionPanel {
             return String.format("%,.0f", price);
         } catch (Exception e) {
             return priceStr;
+        }
+    }
+    
+    private String cleanImageUrl(String url) {
+        try {
+            if (url == null) return null;
+
+            if (url.contains("google.com/url")) {
+                String decoded = java.net.URLDecoder.decode(url, "UTF-8");
+
+                String[] parts = decoded.split("url=");
+                if (parts.length < 2) return null;
+
+                String real = parts[1];
+
+                int end = real.indexOf("&");
+                if (end != -1) {
+                    real = real.substring(0, end);
+                }
+
+                return real;
+            }
+
+            return url;
+
+        } catch (Exception e) {
+            return url;
         }
     }
     

@@ -301,17 +301,29 @@ public class AuctionDAO {
 
         String getMinSql = "SELECT min_bid FROM auctions WHERE auction_id=?";
         
-        boolean hasStartTime = (startTimeStr != null && !startTimeStr.trim().isEmpty());
-        String timeExpr = hasStartTime ? "?" : "NOW()";
+//        boolean hasStartTime = (startTimeStr != null && !startTimeStr.trim().isEmpty());
+//        String timeExpr = hasStartTime ? "?" : "NOW()";
+//        
+//        String updateSql = """
+//            UPDATE auctions 
+//            SET min_bid=?, current_bid=?, status='ACTIVE',
+//                start_time=""" + timeExpr + """,
+//                duration_minutes=?, 
+//                end_time=DATE_ADD(""" + timeExpr + """, INTERVAL ? MINUTE)
+//            WHERE auction_id=?
+//        """;
         
-        String updateSql = """
-            UPDATE auctions 
-            SET min_bid=?, current_bid=?, status='ACTIVE',
-                start_time=""" + timeExpr + """,
-                duration_minutes=?, 
-                end_time=DATE_ADD(""" + timeExpr + """, INTERVAL ? MINUTE)
-            WHERE auction_id=?
-        """;
+        boolean hasStartTime = (startTimeStr != null && !startTimeStr.trim().isEmpty());
+
+        String startExpr = hasStartTime ? "?" : "NOW()";
+        String endExpr   = hasStartTime ? "?" : "NOW()";
+
+        String updateSql =
+        	    "UPDATE auctions SET min_bid=?, current_bid=?, status='ACTIVE', " +
+        	    "start_time=" + startExpr + ", " +
+        	    "duration_minutes=?, " +
+        	    "end_time=DATE_ADD(" + endExpr + ", INTERVAL duration_minutes MINUTE) " +
+        	    "WHERE auction_id=?";
 
         try (Connection con = DBConnection.getConnection()) {
 
@@ -345,7 +357,7 @@ public class AuctionDAO {
                 if (hasStartTime) {
                     ps.setString(paramIdx++, startTimeStr);
                 }
-                ps.setInt(paramIdx++, duration);
+//                ps.setInt(paramIdx++, duration);
                 ps.setString(paramIdx++, auctionId);
 
                 return ps.executeUpdate() > 0;
@@ -484,7 +496,8 @@ public class AuctionDAO {
 	            a.min_bid,
 	            a.status,
 	            a.winner_id,
-	            c.seller_id
+	            c.seller_id,
+	            a.winner_confirmed
 	        FROM auctions a
 	        JOIN car c ON a.car_id = c.car_id
 	        ORDER BY 

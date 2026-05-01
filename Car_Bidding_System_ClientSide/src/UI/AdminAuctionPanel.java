@@ -75,6 +75,7 @@ public class AdminAuctionPanel {
     public void render(String res) {
         liveSection.getChildren().clear();
         closedSection.getChildren().clear();
+        System.out.println("RAW DATA:\n" + res);
 
         if (res == null || res.trim().isEmpty()) {
             Label empty = new Label("No auctions found");
@@ -83,23 +84,59 @@ public class AdminAuctionPanel {
             return;
         }
 
+//        for (String row : res.split("\n")) {
+//            if (row.trim().isEmpty()) continue;
+//            String[] d = row.split("\\|");
+//            if (d.length < 8) continue;
+//
+//            // d[0]=auctionId, d[1]=title, d[2]=brand, d[3]=model,
+//            // d[4]=minBid, d[5]=status, d[6]=image, d[7]=winnerId, d[8]=sellerId, d[9]=winnerConfirmed
+//            
+//            String status = d[5];
+//            int winnerConfirmed = d.length > 9 ? Integer.parseInt(d[9]) : 0;
+//            
+//            HBox card = createCard(d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], winnerConfirmed);
+//
+//            if ("ACTIVE".equals(status)) {
+//                liveSection.getChildren().add(card);
+//            } else if ("CLOSED".equals(status)) {
+//                closedSection.getChildren().add(card);
+//            }
+//        }
         for (String row : res.split("\n")) {
             if (row.trim().isEmpty()) continue;
-            String[] d = row.split("\\|");
-            if (d.length < 8) continue;
 
-            // d[0]=auctionId, d[1]=title, d[2]=brand, d[3]=model,
-            // d[4]=minBid, d[5]=status, d[6]=image, d[7]=winnerId, d[8]=sellerId, d[9]=winnerConfirmed
-            
-            String status = d[5];
-            int winnerConfirmed = d.length > 9 ? Integer.parseInt(d[9]) : 0;
-            
-            HBox card = createCard(d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], winnerConfirmed);
+            String[] d = row.split("\\|");
+
+            if (d.length < 11) continue; // FIXED
+
+            String auctionId = d[0];
+            String title = d[1];
+            String brand = d[2];
+            String model = d[3];
+            String image = d[4];
+            String currentBid = d[5];
+            String minBid = d[6];
+            String status = d[7];
+            String winnerId = d[8];
+            int winnerConfirmed = 0;
+            try {
+                winnerConfirmed = Integer.parseInt(d[10]);
+            } catch (Exception e) {
+                winnerConfirmed = 0;
+            }
+
+            HBox card = createCard(
+                auctionId, title, brand, model,
+                minBid, status, image, winnerId, winnerConfirmed
+            );
 
             if ("ACTIVE".equals(status)) {
                 liveSection.getChildren().add(card);
             } else if ("CLOSED".equals(status)) {
                 closedSection.getChildren().add(card);
+            } else if ("PENDING".equals(status)) {
+                pendingSection.getChildren().add(card);
             }
         }
     }
@@ -174,7 +211,9 @@ public class AdminAuctionPanel {
             if (imagePath != null && !imagePath.isEmpty() && !imagePath.equals("null")) {
                 img.setImage(new Image(imagePath, 120, 80, false, true, true));
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println("Image load failed: " + imagePath);
+        }
 
         StackPane imgBox = new StackPane(img);
         imgBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 10;");

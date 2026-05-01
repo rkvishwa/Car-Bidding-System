@@ -197,7 +197,9 @@ public class AdminUserPanel {
 
         Label nameLabel = new Label(name);
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 15));
-        nameLabel.setTextFill(Color.web("#111827"));
+        nameLabel.setTextFill(Color.BLACK);
+        nameLabel.setStyle("-fx-text-fill: black; -fx-font-size: 16px;");
+//        nameLabel.setTextFill(Color.web("#111827"));
 
         // Role badge
         Label roleBadge = new Label(role);

@@ -66,7 +66,7 @@ public class CarAuctionFlowTest {
     @Test
     @Order(4)
     void approveAuction() {
-        boolean result = auctionDAO.approveAuction(auctionId, 12000, 10);
+        boolean result = auctionDAO.approveAuction(auctionId, 12000, 10,null);
         assertTrue(result);
     }
 

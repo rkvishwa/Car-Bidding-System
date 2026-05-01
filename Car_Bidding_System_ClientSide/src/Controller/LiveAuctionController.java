@@ -146,11 +146,31 @@ public class LiveAuctionController {
         try {
             String res = AuctionService.getAuction(auctionId);
             String[] d = res.split("\\|");
-            if (d.length >= 8) {
-                String winnerId = d[7];
-                double amount = Double.parseDouble(d[4]);
-                Platform.runLater(() -> view.showWinner(winnerId, amount));
+            if (d.length < 8) {
+                System.out.println("Invalid auction response: " + res);
+                return;
+            }//////////////////////////////////////////////////////////
+            
+            String winnerId = d[7];/////////////////////////////////////
+            double amount;///////////////////////
+//            if (d.length >= 8) {
+//            	
+////                String winnerId = d[7];
+//                amount = Double.parseDouble(d[5]);
+//                Platform.runLater(() -> view.showWinner(winnerId, amount));
+//            }
+            
+            try {
+                amount = Double.parseDouble(d[5]);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid bid value: " + d[5]);
+                return;
             }
+
+            Platform.runLater(() -> view.showWinner(winnerId, amount));
+            //////////////////////////////////////////////////
+            
+            
         } catch (Exception e) { e.printStackTrace(); }
     }
 
